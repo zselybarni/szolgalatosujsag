@@ -175,12 +175,23 @@ async function beagyazottKepekEllenor(torzs) {
 }
 
 /**
- * A képútvonalakat a lap gyökeréhez képest kell megadni, mert a böngésző az
- * `index.html` címéhez viszonyít, nem a Markdown fájléhoz.
+ * Kép lehet a repóban és távoli címen is.
+ *
+ * A távoli képet nem tudjuk – és nem is akarjuk minden építésnél – letölteni,
+ * ezért csak a címét nézzük meg: `http://` nem jó, mert a lap https-en fut, és
+ * a böngésző a kevert tartalmat letiltja, azaz a kép néma maradna.
+ *
+ * A repóban lévő kép útvonalát a lap gyökeréhez képest kell megadni, mert a
+ * böngésző az `index.html` címéhez viszonyít, nem a Markdown fájléhoz.
  */
 async function kepEllenor(nyersUtvonal) {
   const utvonal = nyersUtvonal.trim().replace(/^["']|["']$/g, '');
-  if (!utvonal || /^(https?:)?\/\//i.test(utvonal) || /^(data|mailto):/i.test(utvonal)) return;
+  if (!utvonal) return;
+
+  if (/^http:\/\//i.test(utvonal)) {
+    throw new Error(`a kép http:// címen van, a https-en futó lap nem tölti be: ${utvonal}`);
+  }
+  if (/^(https:)?\/\//i.test(utvonal) || /^data:/i.test(utvonal)) return;
 
   if (utvonal.startsWith('/')) {
     throw new Error(`a képútvonal abszolút, a projektoldalon eltörik: ${utvonal}`);

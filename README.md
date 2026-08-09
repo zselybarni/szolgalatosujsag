@@ -28,6 +28,10 @@ npm test           # a fejlécértelmező tesztjei
 
 ## Új cikk írása
 
+> **Részletes útmutató:** [docs/cikkiras.md](docs/cikkiras.md) — minden
+> fejlécmező, az összes használható Markdown-jelölés, a képkezelés szabályai,
+> az ütemezés és a hibaüzenetek jelentése.
+
 1. Hozz létre egy fájlt a `content/cikkek` mappában
    `ÉÉÉÉ-HH-NN-a-cikk-cime.md` néven. A fájlnév adja a cikk webcímét.
 2. Írd meg a fejlécet és a szöveget:
@@ -78,6 +82,11 @@ Az indexelés hibával leáll, ha a kép nem létezik, ha az útvonal abszolút
 (`/content/…` – a projektoldalon eltörne), vagy ha a cikkhez képest relatív
 (`../images/…`). Ez a borítóképre és a szövegbe ágyazott képekre egyaránt áll,
 így törött kép nem kerül ki a lapra.
+
+Távoli kép is használható – `https://` címmel, borítóként és a szövegben is.
+A `http://` címet az indexelés visszautasítja (a https-en futó lap nem töltené
+be), a távoli kép meglétét pedig nem tudjuk ellenőrizni: ha a másik oldal
+megszűnik, a kép jelzés nélkül eltűnik a cikkből.
 
 ### Ütemezés és kiemelés
 

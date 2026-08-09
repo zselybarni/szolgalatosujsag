@@ -539,6 +539,10 @@ a { color: inherit; }
 .cikk__torzs hr { border: none; border-top: 1px solid var(--vonal); margin: 2em 0; }
 .cikk__torzs table { width: 100%; border-collapse: collapse; font-family: var(--betu-ui); font-size: .95rem; }
 .cikk__torzs th, .cikk__torzs td { padding: 9px 12px; border-bottom: 1px solid var(--vonal); text-align: left; }
+/* A Markdown oszlopigazítását (`:--`, `:-:`, `--:`) a marked align attribútumban
+   adja vissza; a fenti szabály elnyomná, ezért itt kifejezetten érvényesítjük. */
+.cikk__torzs th[align="center"], .cikk__torzs td[align="center"] { text-align: center; }
+.cikk__torzs th[align="right"], .cikk__torzs td[align="right"] { text-align: right; }
 
 .cimkek { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 32px 0 0; }
 .cimke {

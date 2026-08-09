@@ -8,7 +8,7 @@
  * a lapfej, a lábléc, a böngészőfül címe és a lap leírása innen dolgozik.
  */
 export const LAP = {
-  nev: 'Hírfolyam',
+  nev: '9. Szolgálatos Újság',
   /** A lapfejben, a név alatt futó felirat. */
   alcim: 'A Gyermekvasút lapja',
   /** A lábléc első sorában a név után álló szöveg. */
