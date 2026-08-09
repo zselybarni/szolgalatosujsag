@@ -3,9 +3,18 @@
  * vagy a hírsáv szabályainak módosításához elég ezt a fájlt szerkeszteni.
  */
 
+/**
+ * A lap neve és feliratai. Ez az egyetlen hely, ahol át kell írni őket:
+ * a lapfej, a lábléc, a böngészőfül címe és a lap leírása innen dolgozik.
+ */
 export const LAP = {
   nev: 'Hírfolyam',
+  /** A lapfejben, a név alatt futó felirat. */
   alcim: 'A Gyermekvasút lapja',
+  /** A lábléc első sorában a név után álló szöveg. */
+  lablec: 'A Széchenyi-hegyi Gyermekvasút lapja',
+  /** A keresőknek és a linkmegosztásnak szóló leírás. */
+  leiras: 'A Széchenyi-hegyi Gyermekvasút hírei, riportjai és menetrendi tudnivalói.',
   nyelv: 'hu-HU',
   idozona: 'Europe/Budapest',
 };

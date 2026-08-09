@@ -123,8 +123,30 @@ docs/adr/               miért így épül a lap
 CONTEXT.md              a projekt szótára
 ```
 
-A `assets/js/config.js` egyetlen fájlban tartja a lap nevét, a hírsáv
-szabályait, valamint a tábor és az állomások koordinátáit.
+## A lap átnevezése
+
+Minden felirat a `assets/js/config.js` tetején, a `LAP` blokkban él — más
+fájlhoz nem kell hozzányúlni:
+
+```js
+export const LAP = {
+  nev: 'Hírfolyam',                       // lapfej, lábléc, böngészőfül
+  alcim: 'A Gyermekvasút lapja',          // a név alatti felirat a lapfejben
+  lablec: 'A Széchenyi-hegyi Gyermekvasút lapja',
+  leiras: 'A Széchenyi-hegyi Gyermekvasút hírei, …',   // keresőknek
+  nyelv: 'hu-HU',
+  idozona: 'Europe/Budapest',
+};
+```
+
+Az `index.html` ugyanezeket a szövegeket tartalmazza kiindulásként, hogy
+JavaScript nélkül se legyen névtelen a lap, de betöltéskor mindig a
+`config.js` győz. Ha a HTML-ben maradt régi név zavar, ott is átírhatod –
+a megjelenítést nem befolyásolja.
+
+Ugyanebben a fájlban állítható a hírsáv szabálya (`HIRSAV`), a kiemelés
+elévülése (`HIRFOLYAM.kiemelesNapok`), a lead hossza és tördelése (`LEAD`),
+valamint a tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
 
 ## Adatforrások
 

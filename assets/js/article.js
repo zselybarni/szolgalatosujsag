@@ -1,5 +1,6 @@
 /** Egy cikk nézete: fejléc, borítókép, törzs, és ajánló a végén. */
 
+import { LAP } from './config.js';
 import { cikkBetolt } from './content.js';
 import { elem, ikon, urit } from './dom.js';
 import { datumHosszu, relativDatum } from './format.js';
@@ -41,7 +42,7 @@ export async function cikkNezet(tarolo, slug, mindenCikk) {
     ajanlo(meta, mindenCikk),
   );
 
-  document.title = `${meta.title} · Hírfolyam`;
+  document.title = `${meta.title} · ${LAP.nev}`;
 }
 
 function metaSzoveg(meta) {
