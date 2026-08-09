@@ -1,0 +1,52 @@
+name: Közzététel GitHub Pages-re
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Egyszerre egy közzététel fusson; a futó telepítést nem szakítjuk félbe.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  epites:
+    name: Jegyzék építése
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Front matter tesztek
+        run: npm test
+
+      # A cikkjegyzék a .md fájlokból készül, hogy a szerkesztőnek elég legyen
+      # egy Markdown fájlt beküldenie.
+      - name: Cikkjegyzék előállítása
+        run: npm run index
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  kozzetetel:
+    name: Telepítés
+    needs: epites
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.telepites.outputs.page_url }}
+    steps:
+      - id: telepites
+        uses: actions/deploy-pages@v4

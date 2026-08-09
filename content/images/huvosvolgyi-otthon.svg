@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="A hűvösvölgyi Gyermekvasutas Otthon épülete">
+  <defs>
+    <linearGradient id="eg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5fbcd6"/>
+      <stop offset="1" stop-color="#d8eef3"/>
+    </linearGradient>
+    <linearGradient id="fal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e0ece7"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#eg2)"/>
+  <circle cx="200" cy="150" r="60" fill="#fff" opacity=".5"/>
+  <circle cx="252" cy="168" r="44" fill="#fff" opacity=".45"/>
+  <circle cx="156" cy="172" r="38" fill="#fff" opacity=".4"/>
+
+  <path d="M0 560c160-30 300 10 470-16 150-23 260-40 420-16 130 20 230 32 310 26v196H0z" fill="#0f7a52"/>
+  <path d="M0 612c180 12 340-16 520-6 190 11 320 30 480 16 90-8 150-14 200-18v146H0z" fill="#0b5f3f"/>
+
+  <g transform="translate(340 250)">
+    <path d="M-30 130 260 12l290 118z" fill="#0b6a86"/>
+    <rect x="10" y="130" width="500" height="230" rx="10" fill="url(#fal)"/>
+    <rect x="10" y="130" width="500" height="14" fill="#0b6a86" opacity=".25"/>
+    <g fill="#0b6a86" opacity=".85">
+      <rect x="52" y="176" width="66" height="74" rx="8"/>
+      <rect x="150" y="176" width="66" height="74" rx="8"/>
+      <rect x="304" y="176" width="66" height="74" rx="8"/>
+      <rect x="402" y="176" width="66" height="74" rx="8"/>
+    </g>
+    <rect x="228" y="240" width="64" height="120" rx="8" fill="#0f7a52"/>
+    <circle cx="278" cy="300" r="5" fill="#fff" opacity=".85"/>
+    <rect x="228" y="82" width="64" height="54" rx="8" fill="#0f7a52"/>
+    <path d="M244 96h32M244 110h32M244 124h32" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <g fill="#0b5f3f">
+    <path d="M120 620c0-70 34-118 34-118s34 48 34 118z"/>
+    <rect x="148" y="612" width="12" height="44" rx="5"/>
+    <path d="M980 640c0-84 40-140 40-140s40 56 40 140z"/>
+    <rect x="1014" y="630" width="13" height="48" rx="6"/>
+  </g>
+
+  <g stroke="#04303f" stroke-opacity=".4" stroke-width="6" stroke-linecap="round">
+    <path d="M0 706h1200"/>
+    <path d="M0 728h1200" stroke-width="4"/>
+  </g>
+</svg>

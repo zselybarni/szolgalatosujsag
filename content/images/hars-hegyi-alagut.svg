@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-label="Gőzmozdony a Hárs-hegyi alagút bejáratánál">
+  <defs>
+    <linearGradient id="eg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f7f9b"/>
+      <stop offset="1" stop-color="#9ed6e4"/>
+    </linearGradient>
+    <linearGradient id="hegy" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#12855a"/>
+      <stop offset="1" stop-color="#07422d"/>
+    </linearGradient>
+    <radialGradient id="melyseg" cx=".5" cy=".55" r=".6">
+      <stop offset="0" stop-color="#02191d"/>
+      <stop offset="1" stop-color="#0a3a45"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#eg3)"/>
+  <path d="M0 300c150-40 260-120 420-120s280 96 430 120c110 18 240-6 350-40v490H0z" fill="url(#hegy)"/>
+
+  <g transform="translate(600 470)">
+    <path d="M-230 190V60a230 200 0 0 1 460 0v130z" fill="#0a4a34" opacity=".65"/>
+    <path d="M-190 190V64a190 166 0 0 1 380 0v126z" fill="url(#melyseg)"/>
+    <path d="M-230 190V60a230 200 0 0 1 460 0v130" fill="none" stroke="#d8eef3" stroke-opacity=".45" stroke-width="12"/>
+  </g>
+
+  <g transform="translate(505 500)">
+    <rect x="0" y="66" width="190" height="112" rx="14" fill="#0b6a86"/>
+    <rect x="24" y="16" width="92" height="56" rx="10" fill="#075169"/>
+    <rect x="36" y="30" width="30" height="30" rx="6" fill="#dff1f5"/>
+    <rect x="76" y="30" width="30" height="30" rx="6" fill="#dff1f5"/>
+    <circle cx="150" cy="120" r="26" fill="#ffd86b"/>
+    <circle cx="150" cy="120" r="12" fill="#fff"/>
+    <rect x="0" y="172" width="190" height="14" rx="7" fill="#04303f"/>
+    <g fill="#04303f">
+      <circle cx="42" cy="196" r="19"/><circle cx="150" cy="196" r="19"/>
+    </g>
+    <path d="M60 12c0-24 30-18 30-42" stroke="#fff" stroke-opacity=".85" stroke-width="10" fill="none" stroke-linecap="round"/>
+    <circle cx="96" cy="-52" r="24" fill="#fff" opacity=".8"/>
+    <circle cx="52" cy="-96" r="32" fill="#fff" opacity=".6"/>
+    <circle cx="-8" cy="-140" r="40" fill="#fff" opacity=".4"/>
+  </g>
+
+  <g stroke="#02272f" stroke-opacity=".55" stroke-width="8" stroke-linecap="round">
+    <path d="M0 700h1200"/>
+    <path d="M0 730h1200" stroke-width="6"/>
+  </g>
+  <g stroke="#02272f" stroke-opacity=".35" stroke-width="7">
+    <path d="M80 692v46M240 692v46M400 692v46M560 692v46M720 692v46M880 692v46M1040 692v46"/>
+  </g>
+</svg>

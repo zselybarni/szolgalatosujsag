@@ -1,0 +1,131 @@
+{
+  "generalva": "2026-08-09T17:55:22.124Z",
+  "cikkek": [
+    {
+      "slug": "2026-08-09-rekordot-dontott-a-nyari-forgalom",
+      "path": "content/cikkek/2026-08-09-rekordot-dontott-a-nyari-forgalom.md",
+      "title": "Rekordot döntött a nyári forgalom a Gyermekvasúton",
+      "date": "2026-08-09",
+      "lead": "Az augusztus első hétvégéjén közlekedő vonatok minden eddiginél több utast szállítottak Széchenyihegy és Hűvösvölgy között. A forgalmi szolgálat hétvégenként két szerelvénnyel dolgozik.",
+      "author": "Szerkesztőség",
+      "section": "Vasút",
+      "tags": [
+        "forgalom",
+        "nyár",
+        "menetrend"
+      ],
+      "cover": "content/images/nyari-forgalom.svg",
+      "coverAlt": "Zöld hegyoldalban kanyargó vonat a Gyermekvasút pályáján",
+      "featured": true,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-08-08-uj-valtokezeloi-szolgalat-szepjuhaszne",
+      "path": "content/cikkek/2026-08-08-uj-valtokezeloi-szolgalat-szepjuhaszne.md",
+      "title": "Új váltókezelői szolgálat indul Szépjuhásznén",
+      "date": "2026-08-08",
+      "lead": "A nyári csúcsforgalom miatt Szépjuhászné állomáson önálló váltókezelői szolgálati hely nyílik, egyelőre a hétvégi napokon.",
+      "author": "Forgalmi rovat",
+      "section": "Szolgálat",
+      "tags": [
+        "szolgálat",
+        "Szépjuhászné",
+        "forgalom"
+      ],
+      "cover": null,
+      "coverAlt": null,
+      "featured": false,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-08-07-nyilt-nap-a-huvosvolgyi-otthonban",
+      "path": "content/cikkek/2026-08-07-nyilt-nap-a-huvosvolgyi-otthonban.md",
+      "title": "Nyílt nap a hűvösvölgyi Gyermekvasutas Otthonban",
+      "date": "2026-08-07",
+      "lead": "Egy délutánra kinyílnak a tantermek, a szolgálati helyiségek és a hálószobák ajtajai: a jelentkezők és a szüleik körbejárhatják a tábort.",
+      "author": "Táborvezetés",
+      "section": "Tábor",
+      "tags": [
+        "tábor",
+        "Hűvösvölgy",
+        "tanfolyam"
+      ],
+      "cover": "content/images/huvosvolgyi-otthon.svg",
+      "coverAlt": "A hűvösvölgyi Gyermekvasutas Otthon épülete fák között",
+      "featured": false,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-08-05-igy-keszul-a-menetrend",
+      "path": "content/cikkek/2026-08-05-igy-keszul-a-menetrend.md",
+      "title": "Így készül a menetrend: fél év egyetlen nyári hétvégéért",
+      "date": "2026-08-05",
+      "lead": "Egy egyvágányú hegyi pályán minden perc számít. A forgalmi szolgálat vezetőjét kérdeztük arról, hogyan áll össze a nyári menetrend.",
+      "author": "Szerkesztőség",
+      "section": "Interjú",
+      "tags": [
+        "menetrend",
+        "interjú",
+        "forgalom"
+      ],
+      "cover": null,
+      "coverAlt": null,
+      "featured": false,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-08-02-nosztalgiavonat-a-hars-hegyi-alaguton-at",
+      "path": "content/cikkek/2026-08-02-nosztalgiavonat-a-hars-hegyi-alaguton-at.md",
+      "title": "Nosztalgiavonat gőzössel a Hárs-hegyi alagúton át",
+      "date": "2026-08-02",
+      "lead": "A vonal legizgalmasabb pontja a 198 méteres Hárs-hegyi alagút. A nosztalgiavonat lassítva halad át rajta, hogy a fütty visszhangozzon.",
+      "author": "Szerkesztőség",
+      "section": "Vasút",
+      "tags": [
+        "nosztalgia",
+        "gőzös",
+        "alagút"
+      ],
+      "cover": "content/images/hars-hegyi-alagut.svg",
+      "coverAlt": "Gőzmozdony a Hárs-hegyi alagút bejárata előtt",
+      "featured": false,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-07-27-tanfolyamzaro-vizsgak",
+      "path": "content/cikkek/2026-07-27-tanfolyamzaro-vizsgak.md",
+      "title": "Tanfolyamzáró vizsgák: negyvenketten kaptak szolgálati beosztást",
+      "date": "2026-07-27",
+      "lead": "Lezárult a tavaszi tanfolyam. A vizsgázók jegyvizsgálói, váltókezelői és forgalmi szolgálattevői beosztásba kerülnek.",
+      "author": "Oktatási rovat",
+      "section": "Tanfolyam",
+      "tags": [
+        "tanfolyam",
+        "vizsga",
+        "szolgálat"
+      ],
+      "cover": null,
+      "coverAlt": null,
+      "featured": false,
+      "readingMinutes": 1
+    },
+    {
+      "slug": "2026-07-15-felujitottak-a-viragvolgyi-peront",
+      "path": "content/cikkek/2026-07-15-felujitottak-a-viragvolgyi-peront.md",
+      "title": "Felújították a virágvölgyi peront",
+      "date": "2026-07-15",
+      "lead": "Új burkolatot és korlátot kapott Virágvölgy állomás peronja, a felszállás így a keresztezések alatt is gyorsabb.",
+      "author": "Pályafenntartás",
+      "section": "Vasút",
+      "tags": [
+        "Virágvölgy",
+        "felújítás",
+        "pálya"
+      ],
+      "cover": null,
+      "coverAlt": null,
+      "featured": false,
+      "readingMinutes": 1
+    }
+  ]
+}
