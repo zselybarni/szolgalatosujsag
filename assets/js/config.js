@@ -11,8 +11,6 @@ export const LAP = {
   nev: '9. Szolgálatos Újság',
   /** A lapfejben, a név alatt futó felirat. */
   alcim: 'Online lapja',
-  /** A lábléc első sorában a név után álló szöveg. */
-  lablec: 'Online lapja',
   /** A keresőknek és a linkmegosztásnak szóló leírás. */
   leiras: 'A 9. Szolgálatos Csoport hírei, riportjai.',
   nyelv: 'hu-HU',
@@ -26,6 +24,10 @@ export const HIRSAV = {
   maxTetel: 10,
   /** Ha az 5 napos ablak üres, ennyi legfrissebb cikk kerül a szalagra. */
   tartalekTetel: 5,
+  /** A szalag eleji felirat. A stíluslap csupa nagybetűvel jeleníti meg. */
+  cimke: 'Friss hírek',
+  /** Ugyanez, amikor az 5 napos ablak üres, és régebbi címek futnak. */
+  tartalekCimke: 'Korábbi hírek',
 };
 
 export const HIRFOLYAM = {

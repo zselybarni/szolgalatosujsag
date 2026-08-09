@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Hírfolyam – a Széchenyi-hegyi Gyermekvasút statikus lapja",
+  "description": "9. Szolgálatos Újság – a 9. Szolgálatos Csoport statikus lapja",
   "scripts": {
     "index": "node tools/build-index.mjs",
     "start": "npm run index && node tools/serve.mjs",

@@ -1,5 +1,5 @@
 /**
- * Friss címek – a lapfej alatti futó szalag.
+ * Friss hírek – a lapfej alatti futó szalag.
  *
  * Tartalma az elmúlt HIRSAV.napok napban megjelent cikk, legfeljebb
  * HIRSAV.maxTetel darab. Ha ebben az ablakban nincs cikk, a szalag nem marad
@@ -28,7 +28,7 @@ export function hirsavKirajzol(cikkek) {
 
   sav.hidden = false;
   sav.classList.toggle('hirsav--tartalek', tartalek);
-  sav.querySelector('.hirsav__cimke').textContent = tartalek ? 'Korábbi címek' : 'Friss címek';
+  sav.querySelector('.hirsav__cimke').textContent = tartalek ? HIRSAV.tartalekCimke : HIRSAV.cimke;
 
   const csoport = () => elem('div', { osztaly: 'hirsav__csoport' }, tetelek.map(tetelElem));
   urit(futo).append(csoport(), csoport());

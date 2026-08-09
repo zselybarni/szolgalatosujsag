@@ -14,7 +14,6 @@ export function arculatAlkalmaz() {
   szoveg('.lapcim__nev', LAP.nev);
   szoveg('.lapcim__alcim', LAP.alcim);
   szoveg('#lablec-nev', LAP.nev);
-  szoveg('#lablec-alcim', LAP.lablec);
 
   document.title = `${LAP.nev} – ${LAP.alcim}`;
   document.documentElement.lang = LAP.nyelv.split('-')[0];

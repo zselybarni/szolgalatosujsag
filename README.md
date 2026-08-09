@@ -1,11 +1,12 @@
-# Hírfolyam
+# 9. Szolgálatos Újság
 
-A Széchenyi-hegyi Gyermekvasút statikus online lapja. Markdown fájlokból áll
-össze, kizárólag kliensoldali JavaScripttel fut, és GitHub Pages-ről szolgál ki.
+A 9. Szolgálatos Csoport statikus online lapja a Széchenyi-hegyi
+Gyermekvasútról. Markdown fájlokból áll össze, kizárólag kliensoldali
+JavaScripttel fut, és GitHub Pages-ről szolgál ki.
 
 - **Lapfej** — bal sarokban az időjárás a Gyermekvasutas Otthon és Tábornál,
   középen a lap neve, jobbra a világos/sötét kapcsoló.
-- **Friss címek** — futó szalag az elmúlt 5 nap híreivel.
+- **Friss hírek** — futó szalag az elmúlt 5 nap híreivel.
 - **Hírfolyam** — vezető cikk, rovatválasztó és cikkrács.
 - **Időjárás a vonal mentén** — az időjárás-jelzőre kattintva állomásonkénti
   előrejelzés nyílik, Széchenyihegytől Hűvösvölgyig.
@@ -139,14 +140,17 @@ fájlhoz nem kell hozzányúlni:
 
 ```js
 export const LAP = {
-  nev: 'Hírfolyam',                       // lapfej, lábléc, böngészőfül
-  alcim: 'A Gyermekvasút lapja',          // a név alatti felirat a lapfejben
-  lablec: 'A Széchenyi-hegyi Gyermekvasút lapja',
-  leiras: 'A Széchenyi-hegyi Gyermekvasút hírei, …',   // keresőknek
+  nev: '9. Szolgálatos Újság',            // lapfej, lábléc, böngészőfül
+  alcim: 'Online lapja',                  // a név alatti felirat a lapfejben
+  leiras: 'A 9. Szolgálatos Csoport hírei, riportjai.',   // keresőknek
   nyelv: 'hu-HU',
   idozona: 'Europe/Budapest',
 };
 ```
+
+A hírsáv feliratai a `HIRSAV` blokkban állnak (`cimke`, `tartalekCimke`), a
+lapfej „logója" pedig maga a kiírt név — külön képfájl nincs hozzá. A
+böngészőfülön látszó ikon: `assets/img/favicon.svg`.
 
 Az `index.html` ugyanezeket a szövegeket tartalmazza kiindulásként, hogy
 JavaScript nélkül se legyen névtelen a lap, de betöltéskor mindig a

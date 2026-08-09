@@ -397,13 +397,13 @@ http://localhost:4173/?elonezet=1
 Ilyenkor az ütemezett cikkek is látszanak, a hírsáv viszont továbbra sem
 mutatja őket.
 
-### Hírsáv (Friss címek)
+### Hírsáv (Friss hírek)
 
 A lapfej alatti futó szalagra magától felkerül minden cikk, amely **az elmúlt
 5 napban** jelent meg, legfeljebb 10 darab. Nem kell hozzá külön mező.
 
 Ha ebben az ablakban egy cikk sincs, a szalag nem marad üresen: a legfrissebb
-5 cím kerül rá, „Korábbi címek" felirattal.
+5 cím kerül rá, „Korábbi hírek" felirattal.
 
 ---
 

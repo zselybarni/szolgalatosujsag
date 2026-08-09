@@ -44,7 +44,7 @@ createServer(async (keres, valasz) => {
     valasz.end(`Nincs ilyen fájl: ${utvonal}`);
   }
 }).listen(PORT, () => {
-  console.log(`Hírfolyam fut:  http://localhost:${PORT}/`);
+  console.log(`A lap fut:  http://localhost:${PORT}/`);
 });
 
 function kuld(valasz, fajl) {

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hírfolyam">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="9. Szolgálatos Újság">
   <defs>
     <linearGradient id="h" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0b6a86"/>
@@ -6,7 +6,13 @@
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="14" fill="url(#h)"/>
-  <path d="M14 44h36M18 48h28" stroke="#ffffff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
-  <path d="M20 38V20M20 29h12M32 38V20" stroke="#fff" stroke-width="5.5" stroke-linecap="round" fill="none"/>
-  <circle cx="45" cy="23" r="6.5" fill="#fff" fill-opacity=".9"/>
+
+  <!-- A kilences: a bowl egy gyűrű, a szára onnan fut le balra. -->
+  <g fill="none" stroke="#fff" stroke-linecap="round">
+    <circle cx="30.5" cy="25" r="9.5" stroke-width="6"/>
+    <path d="M39.6 27.6c-1.1 9.6-5.2 15.2-12.2 17.8" stroke-width="6"/>
+  </g>
+
+  <!-- Sínpár a névadó vasútra utalva. -->
+  <path d="M13 55h38" stroke="#fff" stroke-opacity=".55" stroke-width="3.2" stroke-linecap="round"/>
 </svg>

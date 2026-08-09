@@ -1,7 +1,8 @@
-# Hírfolyam
+# 9. Szolgálatos Újság
 
-A Széchenyi-hegyi Gyermekvasút statikus online lapja. A szerkesztő Markdown
-fájlokat ír, az olvasó egy újságoldalt lát – köztük nincs szerver.
+A 9. Szolgálatos Csoport statikus online lapja a Széchenyi-hegyi
+Gyermekvasútról. A szerkesztő Markdown fájlokat ír, az olvasó egy újságoldalt
+lát – köztük nincs szerver.
 
 ## Nyelv
 
@@ -13,12 +14,12 @@ _Kerülendő_: fejléc, header, masthead.
 
 **Hírsáv**:
 A lapfej alatti futó szalag a legfrissebb címekkel. Az olvasó felé "Friss
-címek" néven jelenik meg.
+hírek" néven jelenik meg.
 _Kerülendő_: ticker, futósáv, hírszalag.
 
 **Hírfolyam**:
 A cikkek fordított időrendű listája a lapfej alatt: egy vezető cikk és az
-alatta lévő cikkrács. Egyben a lap neve is.
+alatta lévő cikkrács. A lap neve ettől független, azt a `LAP.nev` adja.
 _Kerülendő_: feed, hírlista, főoldal.
 
 **Vezető cikk**:
