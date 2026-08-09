@@ -1,5 +1,7 @@
 # Cikkírás — teljes útmutató
 
+[Markdown Előnézet](https://markdownlivepreview.com/)
+
 Ez a leírás mindent tartalmaz, ami egy cikk megírásához kell: a fájl nevétől a
 fejlécmezőkön át a szövegben használható jelölésekig. A példák a lapon
 használt valódi beállításokkal működnek.
