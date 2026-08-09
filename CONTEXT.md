@@ -37,6 +37,15 @@ _Kerülendő_: bejegyzés, poszt, hír, oldal.
 A cikk elején `---` sorok közé zárt mezők: cím, dátum, rovat, borítókép.
 _Kerülendő_: metaadat, front matter, YAML.
 
+**Lead**:
+A cikk egy bekezdésnyi ajánlója, amely a kártyán és a cikk élén is megjelenik.
+Ha a szerkesztő nem írja meg, az első bekezdésből készül.
+_Kerülendő_: bevezető, felvezető, kivonat, összefoglaló.
+
+**Ütemezett cikk**:
+Jövőbeli dátumú cikk. A lapon nem látszik, a saját napján magától megjelenik.
+_Kerülendő_: piszkozat, vázlat, rejtett cikk.
+
 **Rovat**:
 Egy cikk egyetlen témabesorolása (`section` mező), például Vasút vagy Tábor.
 Külön nézete van. Egy cikknek pontosan egy rovata lehet.

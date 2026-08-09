@@ -4,9 +4,9 @@ date: 2026-08-09
 section: Vasút
 author: Szerkesztőség
 lead: >
-  Az augusztus első hétvégéjén közlekedő vonatok minden eddiginél több utast
-  szállítottak Széchenyihegy és Hűvösvölgy között. A forgalmi szolgálat
-  hétvégenként két szerelvénnyel dolgozik.
+  Az augusztus első hétvégéjén közlekedő vonatok minden eddiginél több
+  utast szállítottak Széchenyihegy és Hűvösvölgy között. A forgalmi
+  szolgálat hétvégenként két szerelvénnyel dolgozik.
 cover: content/images/nyari-forgalom.svg
 coverAlt: Zöld hegyoldalban kanyargó vonat a Gyermekvasút pályáján
 featured: true

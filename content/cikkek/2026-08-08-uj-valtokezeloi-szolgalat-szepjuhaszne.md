@@ -4,8 +4,8 @@ date: 2026-08-08
 section: Szolgálat
 author: Forgalmi rovat
 lead: >
-  A nyári csúcsforgalom miatt Szépjuhászné állomáson önálló váltókezelői
-  szolgálati hely nyílik, egyelőre a hétvégi napokon.
+  A nyári csúcsforgalom miatt Szépjuhászné állomáson önálló
+  váltókezelői szolgálati hely nyílik, egyelőre a hétvégi napokon.
 tags: [szolgálat, Szépjuhászné, forgalom]
 ---
 

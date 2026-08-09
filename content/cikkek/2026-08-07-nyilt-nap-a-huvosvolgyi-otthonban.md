@@ -4,8 +4,8 @@ date: 2026-08-07
 section: Tábor
 author: Táborvezetés
 lead: >
-  Egy délutánra kinyílnak a tantermek, a szolgálati helyiségek és a
-  hálószobák ajtajai: a jelentkezők és a szüleik körbejárhatják a tábort.
+  Egy délutánra kinyílnak a tantermek, a szolgálati helyiségek és a hálószobák
+  ajtajai: a jelentkezők és a szüleik körbejárhatják a tábort.
 cover: content/images/huvosvolgyi-otthon.svg
 coverAlt: A hűvösvölgyi Gyermekvasutas Otthon épülete fák között
 tags: [tábor, Hűvösvölgy, tanfolyam]

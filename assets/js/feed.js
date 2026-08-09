@@ -5,7 +5,7 @@
 import { HIRFOLYAM } from './config.js';
 import { rovatok } from './content.js';
 import { elem, urit } from './dom.js';
-import { datumHosszu, relativDatum } from './format.js';
+import { datum, datumHosszu, napKulonbseg, relativDatum } from './format.js';
 
 export function hirfolyamNezet(tarolo, { cikkek, rovat = null }) {
   urit(tarolo);
@@ -31,9 +31,18 @@ export function hirfolyamNezet(tarolo, { cikkek, rovat = null }) {
     return;
   }
 
-  const vezeto = szurt.find((cikk) => cikk.featured) ?? szurt[0];
+  const vezeto = szurt.find(kiemelheto) ?? szurt[0];
   const tobbi = szurt.filter((cikk) => cikk !== vezeto);
   tarolo.append(vezetoCikk(vezeto), racs(tobbi, HIRFOLYAM.elsoAdag));
+}
+
+/**
+ * A `featured` jelölés elévül: néhány hét után a cikk visszaáll a rácsba,
+ * hogy egy elfelejtett jelölés ne ragassza a lap élére a nyári híreket télen.
+ */
+function kiemelheto(cikk) {
+  if (!cikk.featured) return false;
+  return napKulonbseg(datum(cikk.date)) < HIRFOLYAM.kiemelesNapok;
 }
 
 /* --- részek ------------------------------------------------------------- */

@@ -105,7 +105,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 { margin: 0; line-height: 1.18; letter-spacing: -0.018em; font-weight: 750; }
+/* A címek sorai kiegyenlítve törnek, az ajánlók végén nem marad árva szó. */
+h1, h2, h3, h4 {
+  margin: 0; line-height: 1.18; letter-spacing: -0.018em; font-weight: 750;
+  text-wrap: balance;
+}
+.vezeto__lead, .kartya__lead, .cikk__lead { text-wrap: pretty; }
 p { margin: 0; }
 img { max-width: 100%; display: block; }
 a { color: inherit; }

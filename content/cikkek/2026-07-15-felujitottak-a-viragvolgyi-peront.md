@@ -4,8 +4,8 @@ date: 2026-07-15
 section: Vasút
 author: Pályafenntartás
 lead: >
-  Új burkolatot és korlátot kapott Virágvölgy állomás peronja, a felszállás
-  így a keresztezések alatt is gyorsabb.
+  Új burkolatot és korlátot kapott Virágvölgy állomás peronja,
+  a felszállás így a keresztezések alatt is gyorsabb.
 tags: [Virágvölgy, felújítás, pálya]
 ---
 

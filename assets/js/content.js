@@ -8,11 +8,18 @@
  */
 
 import { UTVONALAK } from './config.js';
-import { datum } from './format.js';
+import { datum, napKulonbseg } from './format.js';
 import { frontmatterBont } from './frontmatter.js';
 
 let jegyzekIgeret = null;
 const torzsCache = new Map();
+
+/**
+ * Előnézeti mód: `?elonezet=1` a lap címében megmutatja a jövőre datált
+ * cikkeket is. Enélkül egy jövőbeli dátum ütemezésként működik – a cikk a
+ * saját napján magától megjelenik, újbóli közzététel nélkül.
+ */
+const elonezet = new URLSearchParams(window.location.search).has('elonezet');
 
 /** @returns {Promise<{ cikkek: object[] }>} */
 export function jegyzekBetolt() {
@@ -25,9 +32,11 @@ export function jegyzekBetolt() {
       .then((adat) => ({
         ...adat,
         // A jegyzéket az indexelő már rendezi, de itt is garantáljuk a sorrendet.
-        cikkek: [...(adat.cikkek ?? [])].sort(
-          (a, b) => datum(b.date) - datum(a.date),
-        ),
+        // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
+        // új közzététel: a cikk a saját napján lép be a hírfolyamba.
+        cikkek: [...(adat.cikkek ?? [])]
+          .filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0)
+          .sort((a, b) => datum(b.date) - datum(a.date)),
       }))
       .catch((hiba) => {
         jegyzekIgeret = null;

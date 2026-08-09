@@ -24,6 +24,18 @@ export const HIRFOLYAM = {
   elsoAdag: 9,
   /** A "Továbbiak" gomb ennyivel bővíti a listát. */
   tovabbiAdag: 9,
+  /**
+   * A `featured` jelölés ennyi napig emeli a cikket a hírfolyam élére.
+   * Utána a jelölés magától elévül, és újra a legfrissebb cikk vezet.
+   */
+  kiemelesNapok: 14,
+};
+
+export const LEAD = {
+  /** Kézzel írt lead híján ennyi jelig vesszük át az első bekezdést. */
+  maxHossz: 240,
+  /** A cikk fejlécébe ilyen széles sorokban kerül vissza a lead. */
+  sorSzelesseg: 76,
 };
 
 /**

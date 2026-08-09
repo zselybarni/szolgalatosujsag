@@ -4,8 +4,8 @@ date: 2026-07-27
 section: Tanfolyam
 author: Oktatási rovat
 lead: >
-  Lezárult a tavaszi tanfolyam. A vizsgázók jegyvizsgálói, váltókezelői és
-  forgalmi szolgálattevői beosztásba kerülnek.
+  Lezárult a tavaszi tanfolyam. A vizsgázók jegyvizsgálói,
+  váltókezelői és forgalmi szolgálattevői beosztásba kerülnek.
 tags: [tanfolyam, vizsga, szolgálat]
 ---
 
