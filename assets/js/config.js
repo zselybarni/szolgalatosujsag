@@ -10,11 +10,11 @@
 export const LAP = {
   nev: '9. Szolgálatos Újság',
   /** A lapfejben, a név alatt futó felirat. */
-  alcim: 'A Gyermekvasút lapja',
+  alcim: 'Online lapja',
   /** A lábléc első sorában a név után álló szöveg. */
-  lablec: 'A Széchenyi-hegyi Gyermekvasút lapja',
+  lablec: 'Online lapja',
   /** A keresőknek és a linkmegosztásnak szóló leírás. */
-  leiras: 'A Széchenyi-hegyi Gyermekvasút hírei, riportjai és menetrendi tudnivalói.',
+  leiras: 'A 9. Szolgálatos Csoport hírei, riportjai.',
   nyelv: 'hu-HU',
   idozona: 'Europe/Budapest',
 };
