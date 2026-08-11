@@ -174,6 +174,43 @@
   cursor: pointer;
 }
 .szerk-eszkoz:hover { color: var(--kek); border-color: var(--kek); }
+.szerk-eszkoz--forras { margin-left: auto; font-size: .74rem; letter-spacing: .04em; }
+.szerk-eszkoztar--forras .szerk-eszkoz:not(.szerk-eszkoz--forras) { opacity: .35; pointer-events: none; }
+.szerk-eszkoztar--forras .szerk-eszkoz--forras { color: var(--kek); border-color: var(--kek); }
+
+/* --- formázott írófelület ------------------------------------------------ */
+
+/* A cikk__torzs osztályt is megkapja, ezért a betűk és a térközök pontosan
+   olyanok, mint a megjelent cikkben – amit ír, azt látja. */
+.szerk-iras {
+  min-height: 420px;
+  padding: 20px 22px;
+  border: 1px solid var(--vonal-eros);
+  border-radius: var(--sugar-kicsi);
+  background: var(--alap);
+  margin-top: 0 !important;
+}
+.szerk-iras:focus { outline: 2px solid var(--kek); outline-offset: 1px; border-color: var(--kek); }
+.szerk-iras > *:first-child { margin-top: 0; }
+.szerk-iras:empty::before,
+.szerk-iras > p:only-child:empty::before {
+  content: "A cikk szövege…";
+  color: var(--tinta-nagyon-halvany);
+}
+/* Szerkesztés közben a táblázat és a kép szélei legyenek láthatóak. */
+.szerk-iras table { border: 1px solid var(--vonal-eros); }
+.szerk-iras th, .szerk-iras td { border: 1px solid var(--vonal); }
+.szerk-iras img { outline: 1px dashed var(--vonal-eros); outline-offset: 3px; }
+.szerk-iras hr { border-top: 2px solid var(--kek) !important; }
+
+.szerk-urlsav {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 12px; margin-bottom: 10px;
+  background: var(--kek-halvany);
+  border-radius: var(--sugar-kicsi);
+}
+.szerk-urlsav .szerk-input { flex: 1; min-width: 180px; }
+.szerk-urlsav .szerk-mezo__cimke { margin: 0; white-space: nowrap; }
 
 /* --- képválasztó --------------------------------------------------------- */
 

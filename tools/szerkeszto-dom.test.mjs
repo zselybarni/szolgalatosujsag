@@ -40,8 +40,8 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
   // A navigator a Node-ban csak getter, ezért felülírni csak így lehet.
   globalBeallit('navigator', window.navigator);
   globalThis.requestAnimationFrame = (fuggveny) => setTimeout(fuggveny, 0);
-  // A Markdown-értelmezőt nem itt teszteljük, csak a bekötését.
-  globalThis.marked = { parse: (szoveg) => `<p>${szoveg}</p>` };
+  // A lapon is használt, bemásolt marked – így az előnézet valódi HTML-t kap.
+  globalThis.marked = await markedBetolt();
   globalThis.fetch = fajlKiszolgalo;
 
   await import('../assets/js/szerkeszto/main.js');
@@ -74,11 +74,41 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
     assert.ok(!$('#elonezet').textContent.includes('null'), $('#elonezet').textContent.slice(0, 120));
   });
 
-  await t.test('a törzs a cikkoldal előnézetébe kerül', () => {
-    const torzsMezo = $('.szerk-textarea--torzs');
-    torzsMezo.value = 'Szeptembertől óránként járnak a vonatok.';
-    torzsMezo.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await t.test('a szövegdoboz formázottan ír, a nyers Markdown nincs szem előtt', () => {
+    assert.ok($('.szerk-iras'), 'nincs formázott írófelület');
+    assert.equal($('.szerk-iras').getAttribute('contenteditable'), 'true');
+    assert.ok($('.szerk-textarea--torzs').hidden, 'a nyers Markdown látszik');
+  });
+
+  await t.test('a formázott szövegből Markdown lesz, és bekerül az előnézetbe', () => {
+    const iras = $('.szerk-iras');
+    iras.innerHTML = '<h2>Az új időpontok</h2><p>Szeptembertől <strong>óránként</strong> járnak a vonatok.</p>';
+    iras.dispatchEvent(new window.Event('input', { bubbles: true }));
+
+    // A piszkozatba Markdown kerül, nem HTML.
+    const forras = $('.szerk-textarea--torzs');
+    assert.equal(forras.value, '## Az új időpontok\n\nSzeptembertől **óránként** járnak a vonatok.');
     assert.match($('#elonezet .cikk__torzs').textContent, /Szeptembertől óránként/);
+    assert.equal($('#elonezet .cikk__torzs h2')?.textContent, 'Az új időpontok');
+    assert.equal($('#elonezet .cikk__torzs strong')?.textContent, 'óránként');
+  });
+
+  await t.test('a Forrás módban a nyers Markdown szerkeszthető', () => {
+    const forrasGomb = $$('.szerk-eszkoz').find((g) => g.textContent === 'Forrás');
+    forrasGomb.dispatchEvent(new window.Event('click', { bubbles: true }));
+    assert.ok(!$('.szerk-textarea--torzs').hidden, 'a Forrás mód nem nyílt meg');
+    assert.ok($('.szerk-iras').hidden, 'a formázott felület nem tűnt el');
+
+    // A forrásban írt szöveg megjelenik az előnézetben. (A Markdown-értelmező
+    // itt egy egyszerű helyettesítő, ezért a nyers szöveget keressük.)
+    const forras = $('.szerk-textarea--torzs');
+    forras.value = 'Szeptembertől óránként járnak a vonatok.';
+    forras.dispatchEvent(new window.Event('input', { bubbles: true }));
+    assert.match($('#elonezet .cikk__torzs').textContent, /Szeptembertől óránként/);
+
+    forrasGomb.dispatchEvent(new window.Event('click', { bubbles: true }));
+    assert.ok(!$('.szerk-iras').hidden, 'nem tért vissza a formázott felület');
+    assert.match($('.szerk-iras').textContent, /Szeptembertől óránként/, 'a formázott felület nem vette át a szöveget');
   });
 
   await t.test('a címke gombra kattintva bekerül a cikkbe', () => {
@@ -131,6 +161,14 @@ function globalBeallit(nev, ertek) {
   try {
     Object.defineProperty(globalThis, nev, { value: ertek, configurable: true, writable: true });
   } catch { /* nem baj: a próba nem használja */ }
+}
+
+/** A `vendor/marked.min.js` betöltése – ugyanaz a példány, amit a lap használ. */
+async function markedBetolt() {
+  const forras = await readFile(join(GYOKER, 'vendor', 'marked.min.js'), 'utf8');
+  const modul = { exports: {} };
+  new Function('module', 'exports', forras)(modul, modul.exports);
+  return modul.exports.marked ?? modul.exports;
 }
 
 /** A böngésző fetch-e helyett a lemezről olvasunk. */

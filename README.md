@@ -43,6 +43,10 @@ hivatkozva, de a lábléc jobb szélén ott a bejárata (a halvány ✎ jel).
 
 Amit tud:
 
+- **Formázott szövegírás** — a cikk törzsét úgy írod, ahogy megjelenik: a
+  félkövér félkövér, az alcím alcím, a lista lista. Jelöléseket nem kell írni.
+  A fájl így is Markdown marad; a „Forrás" gombbal bármikor előhozható a nyers
+  szöveg, ha egy táblázatot vagy formázást pontosan kell rendbe tenni.
 - **Űrlap a fejléchez** — dátumválasztó, rovatlista, címkék, borítóképválasztó
   a repóban lévő képekből, kiemelés, fájlnév a címből (ékezetek nélkül).
 - **Rovatok és címkék** — felsorolja a meglévőket, újat is felvehetsz, és szól,

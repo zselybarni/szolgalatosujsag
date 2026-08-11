@@ -10,6 +10,7 @@ import { REPO, UTVONALAK } from '../config.js';
 import { elem, urit } from '../dom.js';
 import { leadSzarmaztat } from '../lead.js';
 import { fajlnevBol, normalizalt } from './slug.js';
+import { szovegSzerkesztoEpit } from './szoveg-szerkeszto.js';
 
 export function urlapEpit(tarolo, allapot, adatok) {
   const {
@@ -27,7 +28,7 @@ export function urlapEpit(tarolo, allapot, adatok) {
   const kiemeltMezo = elem('input', { type: 'checkbox', osztaly: 'szerk-jelolo' });
   const cimkeMezo = elem('input', { type: 'text', osztaly: 'szerk-input', list: 'cimke-lista', placeholder: 'Címke, majd Enter' });
   const slugMezo = elem('input', { type: 'text', osztaly: 'szerk-input szerk-input--mono' });
-  const torzsMezo = elem('textarea', { osztaly: 'szerk-textarea szerk-textarea--torzs', rows: '22', spellcheck: 'true', placeholder: 'A cikk szövege Markdownban…' });
+  const torzsSzerkeszto = szovegSzerkesztoEpit({ allapot, helyiKepRogzit });
 
   const kivalasztottCimkek = elem('div', { osztaly: 'szerk-chipsor' });
   const rovatFigyelmeztetes = elem('p', { osztaly: 'szerk-sugo szerk-sugo--uj' });
@@ -96,8 +97,7 @@ export function urlapEpit(tarolo, allapot, adatok) {
     ]),
 
     szakasz('A cikk szövege', [
-      eszkoztar(torzsMezo, allapot),
-      torzsMezo,
+      torzsSzerkeszto.gyoker,
     ]),
   );
 
@@ -125,7 +125,6 @@ export function urlapEpit(tarolo, allapot, adatok) {
   kot(boritoMezo, 'input', () => allapot.frissit({ cover: boritoMezo.value }));
   kot(boritoAltMezo, 'input', () => allapot.frissit({ coverAlt: boritoAltMezo.value }));
   kot(kiemeltMezo, 'change', () => allapot.frissit({ featured: kiemeltMezo.checked }));
-  kot(torzsMezo, 'input', () => allapot.frissit({ torzs: torzsMezo.value }));
   kot(slugMezo, 'input', () => allapot.frissit({ slug: slugMezo.value, slugKezi: true }));
 
   cimkeMezo.addEventListener('keydown', (esemeny) => {
@@ -135,20 +134,13 @@ export function urlapEpit(tarolo, allapot, adatok) {
     cimkeMezo.value = '';
   });
 
-  // Kép behúzása. Feltölteni a böngészőből nem tudunk, de a hivatkozást
-  // beírjuk, a képet az előnézetben már megmutatjuk, és megmondjuk, hova kell
-  // a fájl. A feltöltőlapra egy kattintással át lehet menni.
-  torzsMezo.addEventListener('dragover', (esemeny) => esemeny.preventDefault());
-  torzsMezo.addEventListener('drop', (esemeny) => {
+  // A kép behúzását a szövegszerkesztő maga kezeli (ott kell a beszúrás
+  // helye); itt csak a hova-tegyem tájékoztatót adjuk hozzá.
+  torzsSzerkeszto.gyoker.addEventListener('drop', (esemeny) => {
     const fajl = esemeny.dataTransfer?.files?.[0];
-    if (!fajl) return;
-    esemeny.preventDefault();
-
-    const utvonal = `${UTVONALAK.kepMappa}/${fajl.name}`;
-    if (fajl.type?.startsWith('image/')) helyiKepRogzit(utvonal, fajl);
-    beszur(torzsMezo, `![${fajl.name.replace(/\.[^.]+$/, '')}](${utvonal})`);
-    allapot.frissit({ torzs: torzsMezo.value });
-    ejtesUzenet(tarolo, utvonal);
+    if (fajl?.type?.startsWith('image/')) {
+      ejtesUzenet(tarolo, `${UTVONALAK.kepMappa}/${fajl.name}`);
+    }
   });
 
   return { frissit };
@@ -164,7 +156,7 @@ export function urlapEpit(tarolo, allapot, adatok) {
     ertekBe(boritoMezo, piszkozat.cover);
     ertekBe(boritoAltMezo, piszkozat.coverAlt);
     ertekBe(slugMezo, piszkozat.slug);
-    ertekBe(torzsMezo, piszkozat.torzs);
+    torzsSzerkeszto.frissit(piszkozat);
     if (kiemeltMezo.checked !== !!piszkozat.featured) kiemeltMezo.checked = !!piszkozat.featured;
 
     cimkeSorFrissit(piszkozat.tags ?? []);
@@ -267,86 +259,13 @@ function chipCsoport(ertekek, kattintas) {
     })));
 }
 
-function eszkoztar(torzsMezo, allapot) {
-  const muveletek = [
-    ['F', 'Félkövér', () => korbevesz(torzsMezo, '**', '**')],
-    ['D', 'Dőlt', () => korbevesz(torzsMezo, '*', '*')],
-    ['H2', 'Alcím', () => sorElejere(torzsMezo, '## ')],
-    ['H3', 'Kisebb alcím', () => sorElejere(torzsMezo, '### ')],
-    ['•', 'Lista', () => sorElejere(torzsMezo, '- ')],
-    ['1.', 'Számozott lista', () => sorElejere(torzsMezo, '1. ')],
-    ['❝', 'Idézet', () => sorElejere(torzsMezo, '> ')],
-    ['🔗', 'Hivatkozás', () => korbevesz(torzsMezo, '[', '](https://)')],
-    ['🖼', 'Kép', () => beszur(torzsMezo, '![Képleírás](content/images/)')],
-    ['⊞', 'Táblázat', () => blokkotBeszur(torzsMezo, TABLA_MINTA)],
-    ['—', 'Elválasztó', () => blokkotBeszur(torzsMezo, '---')],
-    ['{ }', 'Kód', () => korbevesz(torzsMezo, '`', '`')],
-  ];
-
-  return elem('div', { osztaly: 'szerk-eszkoztar' }, muveletek.map(([jel, nev, muvelet]) => elem('button', {
-    type: 'button', osztaly: 'szerk-eszkoz', title: nev, 'aria-label': nev, szoveg: jel,
-    onclick: () => { muvelet(); allapot.frissit({ torzs: torzsMezo.value }); },
-  })));
-}
-
-const TABLA_MINTA = '| Fejléc | Fejléc |\n| :----- | -----: |\n| adat   | adat   |';
-
 /**
- * Szövegcsere a kijelölés helyén.
+ * A blokkos beszúrás (elválasztó, táblázat) sortörés-számítása.
  *
- * `execCommand('insertText')` a hivatalos ajánlásokban elavult, itt mégis ez a
- * helyes eszköz: ez az egyetlen mód, amivel a böngésző **saját visszavonási
- * sora** (Ctrl+Z) megmarad. A `mezo.value = …` írása kiürítené azt, és az
- * olvasó elveszítené a visszavonás lehetőségét a szerkesztőben.
- */
-function csere(mezoElem, szoveg) {
-  mezoElem.focus();
-  try {
-    if (document.execCommand('insertText', false, szoveg)) return;
-  } catch { /* nem támogatott – jöjjön a tartalék */ }
-
-  // Tartalék: a visszavonási sor elveszik, de a szerkesztés működik.
-  const { selectionStart: kezdet, selectionEnd: veg, value } = mezoElem;
-  mezoElem.value = value.slice(0, kezdet) + szoveg + value.slice(veg);
-  mezoElem.setSelectionRange(kezdet + szoveg.length, kezdet + szoveg.length);
-  mezoElem.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-function korbevesz(mezoElem, elotte, utana) {
-  const { selectionStart: kezdet, selectionEnd: veg, value } = mezoElem;
-  const kijelolt = value.slice(kezdet, veg);
-  csere(mezoElem, elotte + kijelolt + utana);
-  // A kurzor a jelölés belsejébe kerül, hogy rögtön írni lehessen.
-  const belseje = kezdet + elotte.length;
-  mezoElem.setSelectionRange(belseje, belseje + kijelolt.length);
-}
-
-function sorElejere(mezoElem, prefix) {
-  const { selectionStart: kezdet, value } = mezoElem;
-  const sorKezdet = value.lastIndexOf('\n', kezdet - 1) + 1;
-  mezoElem.setSelectionRange(sorKezdet, sorKezdet);
-  csere(mezoElem, prefix);
-}
-
-function beszur(mezoElem, szoveg) {
-  csere(mezoElem, szoveg);
-}
-
-/**
- * Önálló blokk (elválasztó, táblázat) beszúrása üres sorral körülvéve.
- *
- * Üres sor nélkül a Markdown a `---`-t nem elválasztónak veszi, hanem az
- * előző bekezdés aláhúzásának, és címsort csinál belőle. A táblázat ugyanígy
- * beolvadna a fölötte lévő bekezdésbe.
- */
-function blokkotBeszur(mezoElem, blokk) {
-  const { selectionStart: kezdet, selectionEnd: veg, value } = mezoElem;
-  csere(mezoElem, blokkKeret(value.slice(0, kezdet), value.slice(veg), blokk));
-}
-
-/**
- * Kiszámolja, mennyi sortörés kell a blokk elé és mögé. Tisztán szöveggel
- * dolgozik, ezért tesztelhető.
+ * A formázott szerkesztésben már nincs rá szükség – ott a böngésző alakítja ki
+ * a blokkokat –, de a „Forrás" mód és a régi cikkek javítása miatt megtartjuk,
+ * és a szabály maga is dokumentált: üres sor nélkül a Markdown a `---`-t nem
+ * elválasztónak veszi, hanem az előző bekezdés aláhúzásának.
  */
 export function blokkKeret(elotte, utana, blokk) {
   let eleje = '';

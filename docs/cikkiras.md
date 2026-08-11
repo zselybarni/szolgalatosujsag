@@ -20,10 +20,15 @@ használt valódi beállításokkal működnek.
 
 ---
 
-> **Felületen is írhatsz.** A `szerkeszto.html` (a bejárata a lábléc halvány ✎
-> jele) ugyanezt a fájlt állítja össze űrlapon, élő előnézettel, és a beküldés
-> előtt ellenőrzi is. Ez a leírás akkor is hasznos: a szerkesztő ugyanezeket a
-> mezőket és jelöléseket kezeli.
+> **Nem kell jelöléseket írnod.** A `szerkeszto.html` (a bejárata a lábléc
+> halvány ✎ jele) ugyanezt a fájlt állítja össze: a fejlécet űrlapon, a szöveget
+> pedig **formázottan** – a félkövér félkövérnek látszik, nem `**így**`.
+>
+> Ez a leírás ettől nem lesz feleslegesebb. Egyrészt a fájl formátuma
+> változatlanul az itt leírt Markdown, tehát kézzel is szerkeszthető. Másrészt a
+> szerkesztő „Forrás" gombja pontosan ezt a nyers szöveget nyitja meg – oda
+> érdemes benézni, ha egy táblázat vagy egy formázás nem úgy sikerül, ahogy
+> szeretnéd. Az alábbi jelölések mind ott is érvényesek.
 
 ## Gyorsindítás
 
