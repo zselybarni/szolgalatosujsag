@@ -7,13 +7,28 @@ import { datumHosszu, relativDatum } from './format.js';
 
 export async function cikkNezet(tarolo, slug, mindenCikk) {
   const { meta, html } = await cikkBetolt(slug);
+  cikkRajzol(tarolo, meta, html, mindenCikk);
+  document.title = `${meta.title} · ${LAP.nev}`;
+}
+
+/**
+ * A cikk kirajzolása kész adatokból. A lap a `cikkNezet`-en keresztül hívja
+ * (az tölti le a cikket), a szerkesztő pedig közvetlenül, a még el sem mentett
+ * piszkozattal – így az előnézet nem egy hasonmás, hanem maga a cikkoldal.
+ *
+ * @param {{ navigacio?: boolean }} beallitas a szerkesztőben a vissza-hivatkozás
+ *   és az ajánló csak zavarna, ezért kikapcsolható.
+ */
+export function cikkRajzol(tarolo, meta, html, mindenCikk, { navigacio = true } = {}) {
   urit(tarolo);
 
   tarolo.append(
-    elem('a', { osztaly: 'vissza', href: '#/' }, [
-      ikon('ikon-vissza', 'vissza__ikon'),
-      elem('span', { szoveg: 'Vissza a hírfolyamhoz' }),
-    ]),
+    navigacio
+      ? elem('a', { osztaly: 'vissza', href: '#/' }, [
+        ikon('ikon-vissza', 'vissza__ikon'),
+        elem('span', { szoveg: 'Vissza a hírfolyamhoz' }),
+      ])
+      : null,
     elem('article', { osztaly: 'cikk' }, [
       elem('header', { osztaly: 'cikk__fej' }, [
         elem('div', { osztaly: 'jelolok' }, [
@@ -39,10 +54,8 @@ export async function cikkNezet(tarolo, slug, mindenCikk) {
       elem('div', { osztaly: 'cikk__torzs', html }),
       cimkeSav(meta),
     ]),
-    ajanlo(meta, mindenCikk),
+    navigacio ? ajanlo(meta, mindenCikk) : null,
   );
-
-  document.title = `${meta.title} · ${LAP.nev}`;
 }
 
 function metaSzoveg(meta) {

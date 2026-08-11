@@ -15,23 +15,21 @@
  * beküldeni: a jegyzék magától frissül.
  */
 
-import { readdir, readFile, writeFile, access } from 'node:fs/promises';
-import { join, dirname, basename, resolve, posix } from 'node:path';
+import { readdir, readFile, writeFile, access, stat } from 'node:fs/promises';
+import { join, dirname, basename, resolve, posix, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { frontmatterBont } from '../assets/js/frontmatter.js';
+import { beagyazottKepek, kepUtvonalHiba, tavoliKep, tisztit } from '../assets/js/kepek.js';
 import { leadSzarmaztat, leadTordel } from '../assets/js/lead.js';
 
 const GYOKER = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CIKK_MAPPA = join(GYOKER, 'content', 'cikkek');
+const KEP_MAPPA = join(GYOKER, 'content', 'images');
 const KIMENET = join(GYOKER, 'content', 'index.json');
+const KEP_KIMENET = join(GYOKER, 'content', 'images.json');
 const SZO_PER_PERC = 200;
-
-/** Beágyazott képek a cikk törzsében – Markdown és nyers HTML alakban is. */
-const KEP_MINTAK = [
-  /!\[[^\]]*\]\(\s*([^)\s]+)/g,
-  /<img[^>]+src\s*=\s*["']([^"']+)["']/gi,
-];
+const KEP_KITERJESZTESEK = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif']);
 
 const hibak = [];
 const atirtFajlok = [];
@@ -64,8 +62,17 @@ await writeFile(
   'utf8',
 );
 
+// Képjegyzék a szerkesztő képválasztójához: a böngésző nem tud mappát listázni.
+const kepek = await kepekOsszegyujt(KEP_MAPPA, 'content/images');
+await writeFile(
+  KEP_KIMENET,
+  `${JSON.stringify({ generalva: new Date().toISOString(), kepek }, null, 2)}\n`,
+  'utf8',
+);
+
 for (const fajl of atirtFajlok) console.log(`  ↻ lead formázva: ${fajl}`);
 console.log(`✓ content/index.json elkészült – ${cikkek.length} cikk.`);
+console.log(`✓ content/images.json elkészült – ${kepek.length} kép.`);
 
 /* ------------------------------------------------------------------------ */
 
@@ -167,44 +174,54 @@ function datumEllenor(ertek) {
 }
 
 async function beagyazottKepekEllenor(torzs) {
-  for (const minta of KEP_MINTAK) {
-    for (const talalat of torzs.matchAll(minta)) {
-      await kepEllenor(talalat[1]);
-    }
+  for (const utvonal of beagyazottKepek(torzs)) {
+    await kepEllenor(utvonal);
   }
 }
 
 /**
  * Kép lehet a repóban és távoli címen is.
  *
- * A távoli képet nem tudjuk – és nem is akarjuk minden építésnél – letölteni,
- * ezért csak a címét nézzük meg: `http://` nem jó, mert a lap https-en fut, és
- * a böngésző a kevert tartalmat letiltja, azaz a kép néma maradna.
- *
- * A repóban lévő kép útvonalát a lap gyökeréhez képest kell megadni, mert a
- * böngésző az `index.html` címéhez viszonyít, nem a Markdown fájléhoz.
+ * A cím alakját a közös `kepek.js` modul dönti el – ugyanaz, amit a szerkesztő
+ * is használ. Itt csak a fájl meglétét tudjuk ráadásként ellenőrizni; a távoli
+ * képet nem töltjük le minden építésnél.
  */
 async function kepEllenor(nyersUtvonal) {
-  const utvonal = nyersUtvonal.trim().replace(/^["']|["']$/g, '');
+  const utvonal = tisztit(nyersUtvonal);
   if (!utvonal) return;
 
-  if (/^http:\/\//i.test(utvonal)) {
-    throw new Error(`a kép http:// címen van, a https-en futó lap nem tölti be: ${utvonal}`);
-  }
-  if (/^(https:)?\/\//i.test(utvonal) || /^data:/i.test(utvonal)) return;
-
-  if (utvonal.startsWith('/')) {
-    throw new Error(`a képútvonal abszolút, a projektoldalon eltörik: ${utvonal}`);
-  }
-  if (utvonal.includes('../')) {
-    throw new Error(`a képútvonal a cikkhez képest relatív; a lap gyökeréhez képest add meg: ${utvonal}`);
-  }
+  const hiba = kepUtvonalHiba(utvonal);
+  if (hiba) throw new Error(hiba);
+  if (tavoliKep(utvonal)) return;
 
   try {
     await access(join(GYOKER, utvonal.replace(/^\.\//, '')));
   } catch {
     throw new Error(`a kép nem található: ${utvonal}`);
   }
+}
+
+/** A képmappa tartalma, alkönyvtárakkal együtt, a lap gyökeréhez képesti úttal. */
+async function kepekOsszegyujt(mappa, prefix) {
+  let bejegyzesek;
+  try {
+    bejegyzesek = await readdir(mappa, { withFileTypes: true });
+  } catch {
+    return []; // nincs képmappa – a szerkesztő ilyenkor csak URL-t fogad el
+  }
+
+  const kepek = [];
+  for (const bejegyzes of bejegyzesek.sort((a, b) => a.name.localeCompare(b.name, 'hu'))) {
+    const utvonal = posix.join(prefix, bejegyzes.name);
+    if (bejegyzes.isDirectory()) {
+      kepek.push(...await kepekOsszegyujt(join(mappa, bejegyzes.name), utvonal));
+      continue;
+    }
+    if (!KEP_KITERJESZTESEK.has(extname(bejegyzes.name).toLowerCase())) continue;
+    const adat = await stat(join(mappa, bejegyzes.name));
+    kepek.push({ path: utvonal, nev: bejegyzes.name, bajt: adat.size });
+  }
+  return kepek;
 }
 
 function tombbe(ertek) {

@@ -32,6 +32,16 @@ test('az idézőjeles érték kettőspontot is tartalmazhat', () => {
   assert.equal(adat.title, 'Menetrend: így készül');
 });
 
+test('az idézőjel megvédi a kettős keresztet is', () => {
+  const { adat } = frontmatterBont('---\ntitle: "Vonat # 3 érkezik"\n---\n');
+  assert.equal(adat.title, 'Vonat # 3 érkezik');
+});
+
+test('idézőjel nélkül a kettős kereszt utáni rész megjegyzés', () => {
+  const { adat } = frontmatterBont('---\ntitle: Vonat érkezik # ezt ne olvasd\n---\n');
+  assert.equal(adat.title, 'Vonat érkezik');
+});
+
 test('front matter nélküli fájl teljes egészében törzs', () => {
   const { adat, torzs } = frontmatterBont('Csak szöveg.\n');
   assert.deepEqual(adat, {});

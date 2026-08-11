@@ -77,7 +77,8 @@ function rovatFejlec(rovat, darab) {
   ]);
 }
 
-function vezetoCikk(cikk) {
+/** Kívülről is elérhető, hogy a szerkesztő előnézete a valódi vezető cikket rajzolja. */
+export function vezetoCikk(cikk) {
   return elem('a', {
     osztaly: `vezeto${cikk.cover ? '' : ' vezeto--kep-nelkul'}`,
     href: `#/cikk/${cikk.slug}`,
@@ -130,7 +131,8 @@ function racs(cikkek, kezdetiDarab) {
   return doboz;
 }
 
-function kartya(cikk) {
+/** Ugyanez a kártyára: a szerkesztő ezt mutatja hírfolyam-előnézetként. */
+export function kartya(cikk) {
   return elem('article', { osztaly: 'kartya' }, [
     elem('a', { osztaly: 'kartya__link', href: `#/cikk/${cikk.slug}` }, [
       cikk.cover

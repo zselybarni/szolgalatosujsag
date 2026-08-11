@@ -88,4 +88,15 @@ export const IDOJARAS = {
 
 export const UTVONALAK = {
   indexJson: './content/index.json',
+  kepekJson: './content/images.json',
+  rovatokJson: './content/rovatok.json',
+  cikkMappa: 'content/cikkek',
+  kepMappa: 'content/images',
+};
+
+/** A repó adatai – a szerkesztő ebből állítja össze a GitHub-hivatkozásokat. */
+export const REPO = {
+  tulajdonos: 'zselybarni',
+  nev: 'szolgalatosujsag',
+  ag: 'main',
 };

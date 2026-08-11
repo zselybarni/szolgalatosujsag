@@ -1,0 +1,283 @@
+/* =========================================================================
+   A szerkesztő saját megjelenése.
+   A lap stíluslapját (style.css) is betöltjük, mert az előnézet a valódi
+   kártyát és cikkoldalt rajzolja – itt csak a szerkesztő kereteit adjuk meg,
+   `szerk-` előtaggal, hogy semmi ne ütközzön a lap osztályaival.
+   ========================================================================= */
+
+.szerk-test {
+  background: var(--alap-melyebb);
+}
+
+/* --- fejléc -------------------------------------------------------------- */
+
+.szerk-fej {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap;
+  padding: 12px clamp(12px, 2.5vw, 24px);
+  background: var(--felulet);
+  border-bottom: var(--sav);
+}
+.szerk-fej__bal { display: flex; align-items: center; gap: 18px; }
+.szerk-fej__jobb { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.szerk-fej__cim { font-size: 1.15rem; }
+.szerk-fej__alcim {
+  font-size: .7rem; text-transform: uppercase; letter-spacing: .14em;
+  color: var(--tinta-nagyon-halvany); font-weight: 700;
+}
+
+.szerk-vissza {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px 8px 10px;
+  border: 1px solid var(--vonal); border-radius: 999px;
+  color: var(--tinta-halvany); text-decoration: none;
+  font-size: .84rem; font-weight: 600;
+}
+.szerk-vissza:hover { color: var(--kek); border-color: var(--kek); }
+.szerk-vissza svg { width: 15px; height: 15px; }
+
+.szerk-piszkozatsav {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin: 0;
+  padding: 12px clamp(12px, 2.5vw, 24px);
+  background: var(--zold-halvany);
+  border-bottom: 1px solid var(--vonal);
+  font-size: .88rem;
+}
+
+/* --- kéthasábos törzs ---------------------------------------------------- */
+
+.szerk-torzs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(16px, 2vw, 28px);
+  align-items: start;
+  padding: clamp(16px, 2.5vw, 28px);
+  max-width: 1900px; margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .szerk-torzs { grid-template-columns: 1fr; }
+  .szerk-ragado { position: static !important; }
+}
+
+.szerk-ragado {
+  position: sticky; top: 104px;
+  display: grid; gap: 18px;
+}
+
+/* --- szakaszok és mezők -------------------------------------------------- */
+
+.szerk-szakasz {
+  padding: 18px 20px 20px;
+  margin-bottom: 18px;
+  background: var(--felulet);
+  border: 1px solid var(--vonal);
+  border-radius: var(--sugar);
+}
+.szerk-szakasz__cim {
+  font-size: .72rem; font-weight: 750;
+  text-transform: uppercase; letter-spacing: .16em;
+  color: var(--tinta-nagyon-halvany);
+  margin-bottom: 14px;
+}
+
+.szerk-mezo { display: grid; gap: 5px; margin-bottom: 14px; }
+.szerk-mezo--sorban { margin-bottom: 0; }
+.szerk-mezo__cimke {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .8rem; font-weight: 650;
+}
+.szerk-parban { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.szerk-sugo { font-size: .74rem; color: var(--tinta-nagyon-halvany); font-weight: 400; }
+.szerk-sugo--uj { margin-top: -6px; margin-bottom: 12px; color: var(--zold); font-weight: 600; }
+
+.szerk-input, .szerk-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--vonal-eros);
+  border-radius: var(--sugar-kicsi);
+  background: var(--alap);
+  color: var(--tinta);
+  font: inherit; font-size: .92rem;
+}
+.szerk-input:focus, .szerk-textarea:focus { outline: 2px solid var(--kek); outline-offset: 1px; border-color: var(--kek); }
+.szerk-input--rovid { max-width: 220px; }
+.szerk-input--mono { font-family: var(--betu-mono); font-size: .84rem; }
+
+.szerk-textarea { resize: vertical; line-height: 1.55; }
+.szerk-textarea--torzs { font-family: var(--betu-mono); font-size: .86rem; min-height: 420px; }
+
+.szerk-jelolosor { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; font-size: .88rem; }
+.szerk-jelolo { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--kek); }
+
+/* --- gombok -------------------------------------------------------------- */
+
+.szerk-gomb {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px;
+  border: 1px solid var(--kek); border-radius: 999px;
+  background: transparent; color: var(--kek);
+  font: inherit; font-size: .86rem; font-weight: 650;
+  cursor: pointer;
+}
+.szerk-gomb:hover:not(:disabled) { background: var(--kek); color: var(--felulet); }
+.szerk-gomb:disabled { opacity: .45; cursor: not-allowed; }
+.szerk-gomb--fo { background: var(--kek); color: var(--felulet); }
+.szerk-gomb--fo:hover:not(:disabled) { background: var(--kek-melyebb); border-color: var(--kek-melyebb); }
+.szerk-gomb--halk {
+  padding: 4px 10px; font-size: .74rem; font-weight: 600;
+  border-color: var(--vonal-eros); color: var(--tinta-halvany);
+}
+.szerk-gomb--halk:hover { background: var(--alap-melyebb); color: var(--kek); border-color: var(--kek); }
+
+.szerk-gombsor { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+
+/* --- chipek (rovat, címke) ----------------------------------------------- */
+
+.szerk-chipsor { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.szerk-chipsor--keszlet { margin-bottom: 4px; }
+
+.szerk-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--vonal-eros); border-radius: 999px;
+  background: var(--alap);
+  color: var(--tinta-halvany);
+  font: inherit; font-size: .78rem; font-weight: 600;
+  cursor: pointer;
+}
+.szerk-chip:hover { border-color: var(--kek); color: var(--kek); }
+.szerk-chip--aktiv {
+  background: var(--zold-halvany); border-color: var(--zold); color: var(--zold-melyebb);
+}
+.szerk-chip__x { font-size: 1rem; line-height: 1; opacity: .7; }
+
+/* --- eszköztár ----------------------------------------------------------- */
+
+.szerk-eszkoztar {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 8px; margin-bottom: 10px;
+  background: var(--alap-melyebb);
+  border: 1px solid var(--vonal);
+  border-radius: var(--sugar-kicsi);
+}
+.szerk-eszkoz {
+  min-width: 34px; height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent; border-radius: 6px;
+  background: var(--felulet);
+  color: var(--tinta-halvany);
+  font: inherit; font-size: .82rem; font-weight: 700;
+  cursor: pointer;
+}
+.szerk-eszkoz:hover { color: var(--kek); border-color: var(--kek); }
+
+/* --- képválasztó --------------------------------------------------------- */
+
+.szerk-kepracs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+.szerk-kep {
+  display: grid; gap: 4px;
+  padding: 6px;
+  border: 1.5px solid var(--vonal); border-radius: var(--sugar-kicsi);
+  background: var(--alap);
+  cursor: pointer;
+  font: inherit;
+}
+.szerk-kep:hover { border-color: var(--kek); }
+.szerk-kep--aktiv { border-color: var(--zold); box-shadow: 0 0 0 3px var(--zold-halvany); }
+.szerk-kep img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 4px; }
+.szerk-kep__nev {
+  font-size: .66rem; color: var(--tinta-nagyon-halvany);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.szerk-kep--nincs {
+  display: grid; place-items: center;
+  min-height: 84px;
+  color: var(--tinta-halvany); font-size: .78rem; font-weight: 600;
+  border-style: dashed;
+}
+
+.szerk-ejtes {
+  margin: 0 0 10px;
+  padding: 10px 14px;
+  background: var(--zold-halvany);
+  border-radius: var(--sugar-kicsi);
+  font-size: .8rem; font-weight: 600;
+}
+
+/* --- kimenet és üzenetek ------------------------------------------------- */
+
+.szerk-kimenet, .szerk-elonezet {
+  padding: 18px 20px 20px;
+  background: var(--felulet);
+  border: 1px solid var(--vonal);
+  border-radius: var(--sugar);
+}
+
+.szerk-fajlnev { font-size: .82rem; color: var(--tinta-halvany); margin-bottom: 12px; }
+.szerk-fajlnev code { font-family: var(--betu-mono); font-size: .8rem; background: var(--alap-melyebb); padding: 3px 7px; border-radius: 5px; }
+
+.szerk-visszajelzes {
+  margin-bottom: 12px; padding: 10px 14px;
+  background: var(--kek-halvany); border-radius: var(--sugar-kicsi);
+  font-size: .82rem; font-weight: 600;
+}
+.szerk-visszajelzes--baj { background: #fdecec; color: #8c1d1d; }
+:root[data-theme="dark"] .szerk-visszajelzes--baj { background: #3a1616; color: #ffbcbc; }
+
+.szerk-uzenetlista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.szerk-uzenet {
+  padding: 9px 13px;
+  border-radius: var(--sugar-kicsi);
+  border-left: 3px solid var(--vonal-eros);
+  background: var(--alap-melyebb);
+  font-size: .82rem;
+}
+.szerk-uzenet--rendben { border-left-color: var(--zold); color: var(--zold-melyebb); font-weight: 650; }
+.szerk-uzenet--hiba { border-left-color: #c0392b; background: #fdecec; color: #7d1a1a; font-weight: 600; }
+.szerk-uzenet--figyelmeztetes { border-left-color: #d99022; }
+.szerk-uzenet--info { border-left-color: var(--kek); }
+:root[data-theme="dark"] .szerk-uzenet--hiba { background: #331414; color: #ffb8b8; }
+
+.szerk-jelzes { margin-left: 8px; font-size: .74rem; color: var(--zold); font-weight: 600; }
+
+/* --- előnézet ------------------------------------------------------------ */
+
+.szerk-fulek { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.szerk-ful {
+  padding: 6px 14px;
+  border: 1px solid var(--vonal); border-radius: 999px;
+  background: transparent; color: var(--tinta-halvany);
+  font: inherit; font-size: .8rem; font-weight: 650;
+  cursor: pointer;
+}
+.szerk-ful:hover { color: var(--kek); border-color: var(--kek); }
+.szerk-ful--aktiv { background: var(--kek); border-color: var(--kek); color: var(--felulet); }
+
+.szerk-szin {
+  padding: 4px;
+  background: var(--alap);
+  border: 1px solid var(--vonal);
+  border-radius: var(--sugar-kicsi);
+  overflow: hidden;
+}
+/* Az előnézet a lap saját osztályait használja, csak a külső margókat vesszük el. */
+.szerk-lap { padding: 18px 14px !important; max-width: none !important; min-height: 0 !important; }
+.szerk-racs { grid-template-columns: minmax(0, 340px) !important; }
+.szerk-hirsav { border-bottom: none; }
+
+.szerk-markdown {
+  margin: 0; padding: 16px;
+  background: var(--alap-melyebb);
+  border-radius: var(--sugar-kicsi);
+  overflow-x: auto;
+  font-family: var(--betu-mono); font-size: .8rem; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+}

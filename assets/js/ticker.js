@@ -42,7 +42,8 @@ export function hirsavKirajzol(cikkek) {
   });
 }
 
-function tetelElem(cikk) {
+/** Egy hírsáv-tétel. A szerkesztő előnézete is ezt hívja. */
+export function tetelElem(cikk) {
   return elem('a', {
     osztaly: 'hirsav__tetel',
     href: `#/cikk/${cikk.slug}`,

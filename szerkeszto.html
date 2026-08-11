@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Szerkesztő</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./assets/css/style.css">
+<link rel="stylesheet" href="./assets/css/szerkeszto.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('hirfolyam:tema');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { /* privát mód */ }
+  })();
+</script>
+</head>
+<body class="szerk-test">
+
+<svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="ikon-nap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2.4v2.3M12 19.3v2.3M2.4 12h2.3M19.3 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+    </symbol>
+    <symbol id="ikon-hold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/>
+    </symbol>
+    <symbol id="ikon-vissza" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 5l-7 7 7 7"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="szerk-fej">
+  <div class="szerk-fej__bal">
+    <a class="szerk-vissza" href="./index.html">
+      <svg aria-hidden="true"><use href="#ikon-vissza"/></svg>
+      <span>A lap</span>
+    </a>
+    <div>
+      <h1 class="szerk-fej__cim">Szerkesztő</h1>
+      <p class="szerk-fej__alcim" id="lap-neve">&nbsp;</p>
+    </div>
+  </div>
+
+  <div class="szerk-fej__jobb">
+    <label class="szerk-mezo szerk-mezo--sorban">
+      <span class="szerk-mezo__cimke"><span>Meglévő cikk</span></span>
+      <select class="szerk-input" id="cikk-valaszto"></select>
+    </label>
+    <button type="button" class="szerk-gomb szerk-gomb--halk" id="uj">Új cikk</button>
+    <button type="button" class="tema-valto" id="tema-valto" aria-label="Sötét mód bekapcsolása" title="Világos / sötét mód">
+      <svg class="tema-valto__ikon tema-valto__ikon--nap" aria-hidden="true"><use href="#ikon-nap"/></svg>
+      <svg class="tema-valto__ikon tema-valto__ikon--hold" aria-hidden="true"><use href="#ikon-hold"/></svg>
+    </button>
+  </div>
+</header>
+
+<p class="szerk-piszkozatsav" id="piszkozat-sav" hidden></p>
+
+<main class="szerk-torzs">
+  <div class="szerk-hasab szerk-hasab--urlap">
+    <form id="urlap" autocomplete="off" onsubmit="return false"></form>
+  </div>
+
+  <div class="szerk-hasab szerk-hasab--elonezet">
+    <div class="szerk-ragado">
+      <section class="szerk-kimenet">
+        <h2 class="szerk-szakasz__cim">Kimenet</h2>
+        <p class="szerk-fajlnev">Fájl: <code id="fajl-nev">—</code></p>
+        <div class="szerk-gombsor">
+          <button type="button" class="szerk-gomb szerk-gomb--fo" id="letoltes" data-kimenet>Letöltés .md</button>
+          <button type="button" class="szerk-gomb" id="vagolap" data-kimenet>Vágólapra</button>
+          <button type="button" class="szerk-gomb" id="github" data-kimenet>Beküldés GitHubon</button>
+        </div>
+        <p class="szerk-visszajelzes" id="visszajelzes" hidden></p>
+        <div id="uzenetek"></div>
+      </section>
+
+      <section class="szerk-elonezet">
+        <h2 class="szerk-szakasz__cim">Előnézet</h2>
+        <div id="elonezet"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="./vendor/marked.min.js"></script>
+<script type="module" src="./assets/js/szerkeszto/main.js"></script>
+</body>
+</html>

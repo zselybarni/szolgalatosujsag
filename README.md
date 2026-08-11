@@ -23,15 +23,56 @@ a fenti kiszolgáló (vagy bármely más statikus szerver).
 További parancsok:
 
 ```bash
-npm run index      # csak a content/index.json újraépítése
-npm test           # a fejlécértelmező tesztjei
+npm run index      # csak a content/index.json és images.json újraépítése
+npm test           # a fejléc-, lead-, kimenet- és ellenőrzéstesztek
 ```
+
+A tesztek között van egy DOM-os füstpróba is a szerkesztőre
+(`tools/szerkeszto-dom.test.mjs`). Ez `jsdom`-ot kér, ami szándékosan **nincs**
+a `package.json`-ban, hogy se a lapnak, se a közzétételnek ne legyen
+függősége — enélkül a próba egyszerűen kimarad. Ha le akarod futtatni:
+
+```bash
+npm install --no-save jsdom && npm test
+```
+
+## Szerkesztő
+
+A `szerkeszto.html` a lap saját szerkesztőfelülete. Nincs kiemelten
+hivatkozva, de a lábléc jobb szélén ott a bejárata (a halvány ✎ jel).
+
+Amit tud:
+
+- **Űrlap a fejléchez** — dátumválasztó, rovatlista, címkék, borítóképválasztó
+  a repóban lévő képekből, kiemelés, fájlnév a címből (ékezetek nélkül).
+- **Rovatok és címkék** — felsorolja a meglévőket, újat is felvehetsz, és szól,
+  ha az új név csak írásmódban tér el egy meglévőtől.
+- **Élő előnézet** — cikkoldal, vezető cikk, kártya, hírsáv és a kész Markdown.
+  Ezek a lap **valódi** függvényeit és stíluslapját használják, tehát nem
+  hasonmások: ha a kártya megjelenése változik, az előnézet magától követi.
+- **Ellenőrzés** — ugyanazokat a szabályokat futtatja, amiket az indexelés,
+  így a hibák beküldés előtt derülnek ki.
+- **Piszkozat** — minden változás mentődik a böngészőben, újratöltés után
+  folytatható.
+- **Meglévő cikk szerkesztése** — a legördülő listából betölthető bármelyik
+  megjelent (és ütemezett) cikk.
+
+A kész fájlt **letöltheted**, **vágólapra másolhatod**, vagy **beküldheted
+GitHubon** egy előre kitöltött űrlapon. A szerkesztő a repóba nem ír – az
+indoklás a [0006-os ADR](docs/adr/0006-szerkeszto-nem-ir-a-repoba.md)-ban.
+
+> A lap nyilvános, ezért a szerkesztő is az. Ez nem gond: legfeljebb szöveget
+> gyárt valakinek a böngészőjében, írási joga nincs. Jelszót szándékosan nem
+> tettünk rá, mert kliensoldali JavaScriptben az a forrásból kiolvasható lenne.
 
 ## Új cikk írása
 
 > **Részletes útmutató:** [docs/cikkiras.md](docs/cikkiras.md) — minden
 > fejlécmező, az összes használható Markdown-jelölés, a képkezelés szabályai,
 > az ütemezés és a hibaüzenetek jelentése.
+>
+> Kézzel sem nehezebb, de ha inkább felületen írnál, ott a
+> [szerkesztő](#szerkeszt%C5%91).
 
 1. Hozz létre egy fájlt a `content/cikkek` mappában
    `ÉÉÉÉ-HH-NN-a-cikk-cime.md` néven. A fájlnév adja a cikk webcímét.
@@ -123,13 +164,19 @@ Source: GitHub Actions**.
 
 ```
 index.html              a váz és az ikonkészlet
+szerkeszto.html         a szerkesztőfelület
 assets/css/style.css    a teljes megjelenés, világos és sötét paletta
+assets/css/szerkeszto.css  a szerkesztő saját keretei
 assets/js/              kliensoldali modulok (config, útválasztó, nézetek, időjárás)
+assets/js/szerkeszto/   a szerkesztő moduljai
 content/cikkek/*.md     a cikkek
+content/rovatok.json    a gondozott rovatlista – ezt kézzel szerkeszd
 content/index.json      a cikkjegyzék – a build állítja elő, kézzel ne szerkeszd
+content/images.json     a képjegyzék a képválasztóhoz – szintén a build írja
 tools/                  jegyzékkészítő, fejlesztői kiszolgáló, tesztek
 vendor/marked.min.js    a bemásolt Markdown-értelmező
 docs/adr/               miért így épül a lap
+docs/cikkiras.md        cikkírási útmutató
 CONTEXT.md              a projekt szótára
 ```
 

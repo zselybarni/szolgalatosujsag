@@ -1,0 +1,10 @@
+{
+  "megjegyzes": "A lap rovatai. Ez kézzel gondozott lista: a szerkesztő ezt ajánlja fel, és csak innen, illetve a már megjelent cikkekből ismert rovatokat mutatja. Új rovatot itt vegyél fel, hogy a vocabulary ne cikkenként szaporodjon.",
+  "rovatok": [
+    "Vasút",
+    "Szolgálat",
+    "Tábor",
+    "Tanfolyam",
+    "Interjú"
+  ]
+}

@@ -97,11 +97,16 @@ function listaOlvas(sorok, kezdet) {
 }
 
 function skalar(nyers) {
-  const ertek = nyers.replace(/\s+#\s.*$/, '').trim();
+  const nyersTiszta = nyers.trim();
 
-  if (/^".*"$/.test(ertek) || /^'.*'$/.test(ertek)) {
-    return ertek.slice(1, -1).replace(/\\"/g, '"');
+  // Az idézőjel mindent megvéd, a megjegyzés-jelölést is: a "hír # 3" cím
+  // értéke a teljes szöveg. Ezért a megjegyzést csak idézőjel nélküli
+  // értékből vágjuk le – különben a záró idézőjel is odalenne.
+  if (/^".*"$/.test(nyersTiszta) || /^'.*'$/.test(nyersTiszta)) {
+    return nyersTiszta.slice(1, -1).replace(/\\"/g, '"');
   }
+
+  const ertek = nyersTiszta.replace(/\s+#\s.*$/, '').trim();
   if (/^\[.*\]$/.test(ertek)) {
     const belso = ertek.slice(1, -1).trim();
     return belso ? belso.split(',').map((e) => skalar(e.trim())) : [];

@@ -707,3 +707,12 @@ a { color: inherit; }
 .lablec__sor { font-size: .84rem; }
 .lablec__sor--halvany { color: var(--tinta-nagyon-halvany); font-size: .76rem; margin-top: 6px; }
 .lablec a { color: var(--kek); }
+
+/* A szerkesztő bejárata: halkan ott van, fókuszra és rámutatásra előjön. */
+.lablec__szerkeszto {
+  margin-left: 10px;
+  opacity: .25;
+  text-decoration: none;
+  transition: opacity .15s ease;
+}
+.lablec__szerkeszto:hover, .lablec__szerkeszto:focus-visible { opacity: 1; }

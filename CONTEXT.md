@@ -43,6 +43,17 @@ A cikk egy bekezdésnyi ajánlója, amely a kártyán és a cikk élén is megje
 Ha a szerkesztő nem írja meg, az első bekezdésből készül.
 _Kerülendő_: bevezető, felvezető, kivonat, összefoglaló.
 
+**Szerkesztő**:
+A `szerkeszto.html` lap, amin a cikk összeállítható: űrlap a fejlécnek,
+Markdown-szerkesztő a szövegnek, és előnézet. A kész fájlt kiadja, de a repóba
+nem írja – lásd [0006](docs/adr/0006-szerkeszto-nem-ir-a-repoba.md).
+_Kerülendő_: admin, CMS, backend, felület.
+
+**Piszkozat**:
+A szerkesztőben éppen összeállított, még be nem küldött cikk. A böngésző
+tárolójában él, újratöltés után folytatható.
+_Kerülendő_: vázlat, draft, munkapéldány.
+
 **Ütemezett cikk**:
 Jövőbeli dátumú cikk. A lapon nem látszik, a saját napján magától megjelenik.
 _Kerülendő_: piszkozat, vázlat, rejtett cikk.

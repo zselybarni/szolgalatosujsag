@@ -20,6 +20,11 @@ használt valódi beállításokkal működnek.
 
 ---
 
+> **Felületen is írhatsz.** A `szerkeszto.html` (a bejárata a lábléc halvány ✎
+> jele) ugyanezt a fájlt állítja össze űrlapon, élő előnézettel, és a beküldés
+> előtt ellenőrzi is. Ez a leírás akkor is hasznos: a szerkesztő ugyanezeket a
+> mezőket és jelöléseket kezeli.
+
 ## Gyorsindítás
 
 1. Hozz létre egy fájlt: `content/cikkek/2026-08-14-uj-menetrend.md`

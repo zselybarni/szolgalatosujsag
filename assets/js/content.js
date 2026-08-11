@@ -29,15 +29,18 @@ export function jegyzekBetolt() {
         if (!valasz.ok) throw new Error(`A cikkjegyzék nem tölthető be (${valasz.status}).`);
         return valasz.json();
       })
-      .then((adat) => ({
-        ...adat,
-        // A jegyzéket az indexelő már rendezi, de itt is garantáljuk a sorrendet.
-        // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
-        // új közzététel: a cikk a saját napján lép be a hírfolyamba.
-        cikkek: [...(adat.cikkek ?? [])]
-          .filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0)
-          .sort((a, b) => datum(b.date) - datum(a.date)),
-      }))
+      .then((adat) => {
+        const rendezett = [...(adat.cikkek ?? [])]
+          .sort((a, b) => datum(b.date) - datum(a.date));
+        return {
+          ...adat,
+          // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
+          // új közzététel: a cikk a saját napján lép be a hírfolyamba.
+          cikkek: rendezett.filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0),
+          /** Szűrés nélkül, az ütemezett cikkekkel együtt – a szerkesztőnek. */
+          mindenCikk: rendezett,
+        };
+      })
       .catch((hiba) => {
         jegyzekIgeret = null;
         throw hiba;
@@ -82,7 +85,8 @@ export function rovatok(cikkek) {
     .map(([nev, darab]) => ({ nev, darab }));
 }
 
-function markdownRenderel(torzs) {
+/** Markdown → HTML. A szerkesztő előnézete ugyanezt használja, hogy ne térjen el. */
+export function markdownRenderel(torzs) {
   if (!globalThis.marked) throw new Error('A Markdown-értelmező nem töltődött be.');
   const html = globalThis.marked.parse(torzs, { gfm: true, breaks: false });
 
