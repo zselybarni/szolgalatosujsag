@@ -25,5 +25,9 @@ viszont már nem statikus lap.
   a forrásból kiolvasható lenne.
 - A hosszú cikk nem fér el a GitHub-űrlap címsorában (kb. 6000 jel fölött), erre
   a szerkesztő figyelmeztet, és a vágólapos utat ajánlja.
-- A képek feltöltése ugyanezért marad kézi: a szerkesztő beírja a hivatkozást,
-  és megmondja, hova kell tenni a fájlt.
+- A képek feltöltése ugyanezért marad kézi, de van egy külön ok is: a cikk
+  szövege elmegy a cím sorában, egy **fájl** viszont nem. A GitHub feltöltőlapja
+  fájlválasztót használ, és azt a böngésző más oldal kódjából nem engedi
+  kitölteni – ez szándékos védelem, nem hiányosság. A szerkesztő ezért a
+  feltöltőlapot nyitja meg a jó mappára, a képet pedig addig a helyi fájlból
+  mutatja az előnézetben.

@@ -9,6 +9,7 @@
 import { LAP, REPO, UTVONALAK } from '../config.js';
 import { jegyzekBetolt } from '../content.js';
 import { elem, urit } from '../dom.js';
+import { datumHosszu, ora } from '../format.js';
 import { temaInditas } from '../theme.js';
 import { allapotLetrehoz, maiNap, uresPiszkozat } from './allapot.js';
 import { ellenoriz, vanHiba } from './ellenorzes.js';
@@ -30,17 +31,29 @@ document.getElementById('lap-neve').textContent = LAP.nev;
 
 const { mindenCikk, kepek, kuratltRovatok } = await adatokBetolt();
 
+/**
+ * A behúzott, de még fel nem töltött képek: útvonal → a helyi fájl ideiglenes
+ * címe. Csak az előnézethez kell; a lapra a fájl feltöltésével kerül fel.
+ */
+const helyiKepek = new Map();
+
 const urlap = urlapEpit(urlapTarolo, allapot, {
   rovatok: rovatokListaja(mindenCikk, kuratltRovatok),
   cimkek: cimkekListaja(mindenCikk),
   szerzok: [...new Set(mindenCikk.map((c) => c.author).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'hu')),
   kepek: kepek.map((k) => k.path),
   kuratltRovatok,
+  helyiKepRogzit: (utvonal, fajl) => {
+    const regi = helyiKepek.get(utvonal);
+    if (regi) URL.revokeObjectURL(regi);
+    helyiKepek.set(utvonal, URL.createObjectURL(fajl));
+  },
 });
 
 const elonezet = elonezetEpit(elonezetTarolo, {
   markdownForras: () => markdownOsszeallit(allapot.get()),
   mindenCikk,
+  helyiKepek,
 });
 
 allapot.figyel((piszkozat) => {
@@ -146,6 +159,7 @@ function uzenetekRajzol(piszkozat) {
   const uzenetek = ellenoriz(piszkozat, {
     cikkek: mindenCikk,
     kepek: kepek.map((k) => k.path),
+    helyiKepek: [...helyiKepek.keys()],
   });
 
   urit(uzenetTarolo);
@@ -230,13 +244,17 @@ function piszkozatVisszatoltes() {
   const mentett = allapot.mentettBetolt();
   if (!mentett) return;
 
+  const { piszkozat, mentve } = mentett;
   const sav = document.getElementById('piszkozat-sav');
   sav.hidden = false;
   urit(sav).append(
-    elem('span', { szoveg: `Van egy félbehagyott piszkozat: „${mentett.title || 'cím nélkül'}".` }),
+    elem('span', {
+      szoveg: `Félbehagyott piszkozat: „${piszkozat.title || 'cím nélkül'}"`
+        + `${mentve ? ` – ${datumHosszu(new Date(mentve).toISOString())} ${ora(new Date(mentve).toISOString())}` : ''}.`,
+    }),
     elem('button', {
       type: 'button', osztaly: 'szerk-gomb szerk-gomb--halk', szoveg: 'Folytatom',
-      onclick: () => { allapot.csere(mentett); sav.hidden = true; },
+      onclick: () => { allapot.csere(piszkozat); sav.hidden = true; },
     }),
     elem('button', {
       type: 'button', osztaly: 'szerk-gomb szerk-gomb--halk', szoveg: 'Eldobom',

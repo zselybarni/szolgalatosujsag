@@ -7,6 +7,7 @@
  */
 
 import { cikkRajzol } from '../article.js';
+import { HIRSAV } from '../config.js';
 import { markdownRenderel } from '../content.js';
 import { elem, urit } from '../dom.js';
 import { kartya, vezetoCikk } from '../feed.js';
@@ -22,7 +23,7 @@ const NEZETEK = [
   { kulcs: 'markdown', nev: 'Markdown' },
 ];
 
-export function elonezetEpit(tarolo, { markdownForras, mindenCikk = [] }) {
+export function elonezetEpit(tarolo, { markdownForras, mindenCikk = [], helyiKepek = new Map() }) {
   let aktiv = 'cikk';
   const szin = elem('div', { osztaly: 'szerk-szin' });
   const fulek = elem('div', { osztaly: 'szerk-fulek', role: 'tablist' },
@@ -40,9 +41,12 @@ export function elonezetEpit(tarolo, { markdownForras, mindenCikk = [] }) {
 
   function frissit(piszkozat) {
     utolsoPiszkozat = piszkozat;
-    const cikk = metaLetrehoz(piszkozat);
     urit(szin);
+    rajzol(metaLetrehoz(piszkozat), piszkozat);
+    helyiKepeketBehelyettesit(szin);
+  }
 
+  function rajzol(cikk, piszkozat) {
     if (aktiv === 'markdown') {
       szin.append(elem('pre', { osztaly: 'szerk-markdown' }, [
         elem('code', { szoveg: markdownForras() }),
@@ -71,13 +75,26 @@ export function elonezetEpit(tarolo, { markdownForras, mindenCikk = [] }) {
 
     // Hírsáv: a szalag egy tételét a valódi szalagon belül mutatjuk.
     szin.append(elem('div', { osztaly: 'hirsav szerk-hirsav' }, [
-      elem('span', { osztaly: 'hirsav__cimke', szoveg: 'Friss hírek' }),
+      elem('span', { osztaly: 'hirsav__cimke', szoveg: HIRSAV.cimke }),
       elem('div', { osztaly: 'hirsav__ablak' }, [
         elem('div', { osztaly: 'hirsav__futo' }, [
           elem('div', { osztaly: 'hirsav__csoport' }, [tetelElem(cikk)]),
         ]),
       ]),
     ]));
+  }
+
+  /**
+   * A behúzott, de még fel nem töltött képek a repóban nincsenek meg, ezért a
+   * böngésző nem tudná betölteni őket. Az előnézetben a helyi fájlra mutató
+   * ideiglenes címet tesszük be helyettük, hogy látszódjon, mi lesz.
+   */
+  function helyiKepeketBehelyettesit(gyoker) {
+    if (!helyiKepek.size) return;
+    for (const kep of gyoker.querySelectorAll('img')) {
+      const helyi = helyiKepek.get(kep.getAttribute('src'));
+      if (helyi) kep.src = helyi;
+    }
   }
 
   function utolsoRajzol() {

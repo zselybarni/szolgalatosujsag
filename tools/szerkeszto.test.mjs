@@ -6,6 +6,7 @@ import { beagyazottKepek, kepUtvonalHiba } from '../assets/js/kepek.js';
 import { ellenoriz, vanHiba } from '../assets/js/szerkeszto/ellenorzes.js';
 import { markdownOsszeallit } from '../assets/js/szerkeszto/kimenet.js';
 import { fajlnevBol, slugHelyes, slugositas } from '../assets/js/szerkeszto/slug.js';
+import { blokkKeret } from '../assets/js/szerkeszto/urlap.js';
 
 const MA = new Date('2026-08-14T12:00:00');
 
@@ -160,6 +161,35 @@ test('figyelmeztet a borítókép leírásának hiányára', () => {
 
 test('a hibátlan piszkozat nem termel hibát', () => {
   assert.ok(!vanHiba(ellenoriz(piszkozat(), { ma: MA })));
+});
+
+test('a még fel nem töltött behúzott kép csak figyelmeztetés, nem hiba', () => {
+  const uzenetek = ellenoriz(
+    piszkozat({ torzs: '![kép](content/images/friss.png)' }),
+    { kepek: ['content/images/van.svg'], helyiKepek: ['content/images/friss.png'], ma: MA },
+  );
+  assert.ok(!vanHiba(uzenetek), 'nem lehet hiba, hiszen a cikk beküldhető');
+  assert.ok(uzenetek.some((u) => u.szint === 'figyelmeztetes' && u.szoveg.includes('fel kell tölteni')));
+});
+
+/* --- blokk beszúrása ----------------------------------------------------- */
+
+test('az elválasztó üres sort kap, hogy ne aláhúzás legyen belőle', () => {
+  // "Egy bekezdés.\n---" a Markdownban címsort csinál az előző sorból.
+  assert.equal(blokkKeret('Egy bekezdés.', '', '---'), '\n\n---\n');
+  assert.equal(blokkKeret('Egy bekezdés.\n', '', '---'), '\n---\n');
+  assert.equal(blokkKeret('Egy bekezdés.\n\n', '', '---'), '---\n');
+});
+
+test('a blokk után is marad üres sor, ha folytatódik a szöveg', () => {
+  // A visszatérési érték csak a beszúrandó szöveg; az `utana` már a mezőben van.
+  assert.equal(blokkKeret('Előtte.\n\n', 'Utána.', '---'), '---\n\n');
+  assert.equal(blokkKeret('Előtte.\n\n', '\nUtána.', '---'), '---\n');
+  assert.equal(blokkKeret('Előtte.\n\n', '\n\nUtána.', '---'), '---');
+});
+
+test('üres szerkesztőbe beszúrva nem kezd sortöréssel', () => {
+  assert.equal(blokkKeret('', '', '---'), '---\n');
 });
 
 /* --- közös képmodul ------------------------------------------------------ */

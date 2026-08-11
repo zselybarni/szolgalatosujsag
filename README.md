@@ -53,13 +53,31 @@ Amit tud:
 - **Ellenőrzés** — ugyanazokat a szabályokat futtatja, amiket az indexelés,
   így a hibák beküldés előtt derülnek ki.
 - **Piszkozat** — minden változás mentődik a böngészőben, újratöltés után
-  folytatható.
+  folytatható. Egy cikk puszta *megnyitása* nem számít piszkozatnak, csak a
+  tényleges szerkesztés, és két hét után a mentés elévül.
 - **Meglévő cikk szerkesztése** — a legördülő listából betölthető bármelyik
   megjelent (és ütemezett) cikk.
+- **Ctrl+Z** — a szerkesztő az eszköztár műveleteit is a böngésző saját
+  visszavonási sorába teszi, így a gombokkal beszúrt szöveg is visszavonható.
 
 A kész fájlt **letöltheted**, **vágólapra másolhatod**, vagy **beküldheted
 GitHubon** egy előre kitöltött űrlapon. A szerkesztő a repóba nem ír – az
 indoklás a [0006-os ADR](docs/adr/0006-szerkeszto-nem-ir-a-repoba.md)-ban.
+
+### Képek feltöltése
+
+A cikk szövege elmegy az előre kitöltött GitHub-űrlapon, mert az szöveg. A kép
+nem: a feltöltőlap fájlt kér, és egy másik oldal fájlválasztóját a böngésző
+biztonsági okból nem engedi programból kitölteni — ezt semmilyen trükkel nem
+lehet megkerülni kiszolgáló nélkül. Ezért a szerkesztő azt teszi, ami innen
+elérhető:
+
+1. A képet behúzhatod a szövegdobozba: beírja a hivatkozást, és az
+   **előnézetben azonnal meg is mutatja** a képet (a helyi fájlból).
+2. A „Kép feltöltése GitHubon" gomb egyenesen a `content/images` mappa
+   feltöltőlapját nyitja meg — oda kell behúzni magát a fájlt.
+3. Amíg a kép nincs a repóban, az ellenőrzés figyelmeztetésként emlékeztet rá,
+   de nem tiltja le a cikk beküldését.
 
 > A lap nyilvános, ezért a szerkesztő is az. Ez nem gond: legfeljebb szöveget
 > gyárt valakinek a böngészőjében, írási joga nincs. Jelszót szándékosan nem

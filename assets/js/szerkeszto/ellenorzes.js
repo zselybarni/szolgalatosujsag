@@ -18,11 +18,13 @@ const MAX_CIM = 90;
  * ezt a piszkozat `eredetiSlug` mezője mondja meg.
  *
  * @param {object} piszkozat
- * @param {{ cikkek?: object[], kepek?: string[], ma?: Date }} kornyezet
+ * @param {{ cikkek?: object[], kepek?: string[], helyiKepek?: string[], ma?: Date }} kornyezet
+ *   `helyiKepek`: a szerkesztőbe behúzott, de a repóba még fel nem töltött
+ *   képek útvonalai – ezek nem hibák, csak tennivalók.
  * @returns {{ szint: 'hiba'|'figyelmeztetes'|'info', szoveg: string }[]}
  */
 export function ellenoriz(piszkozat, kornyezet = {}) {
-  const { cikkek = [], kepek = [], ma = new Date() } = kornyezet;
+  const { cikkek = [], kepek = [], helyiKepek = [], ma = new Date() } = kornyezet;
   const eredetiSlug = piszkozat.eredetiSlug ?? null;
   const uzenetek = [];
   const hiba = (szoveg) => uzenetek.push({ szint: 'hiba', szoveg });
@@ -86,6 +88,8 @@ export function ellenoriz(piszkozat, kornyezet = {}) {
     if (kepHiba) { hiba(kepHiba); continue; }
     if (tavoliKep(utvonal)) {
       info(`Távoli kép: ${utvonal} – a meglétét nem tudjuk ellenőrizni.`);
+    } else if (helyiKepek.includes(utvonal)) {
+      figyelmeztetes(`A ${utvonal} képet még fel kell tölteni a repóba – az előnézetben már látszik, a lapon még nem.`);
     } else if (kepek.length && !kepek.includes(utvonal)) {
       hiba(`Ez a kép nincs a repóban: ${utvonal} – töltsd fel, vagy javítsd az útvonalat.`);
     }
