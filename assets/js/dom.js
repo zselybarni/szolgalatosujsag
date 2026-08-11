@@ -38,3 +38,16 @@ export function urit(csomopont) {
   csomopont.replaceChildren();
   return csomopont;
 }
+
+/**
+ * Gyerekek hozzáfűzése úgy, hogy az elhagyott részek eltűnjenek.
+ *
+ * Az `append(null)` a DOM-ban nem kihagyást jelent, hanem beszúr egy „null"
+ * szövegcsomót – ezért a feltételesen megjelenő blokkokat mindig ezen
+ * keresztül fűzzük hozzá, ne közvetlenül.
+ */
+export function hozzafuz(csomopont, ...gyerekek) {
+  const szurt = gyerekek.filter((gyerek) => gyerek !== null && gyerek !== undefined && gyerek !== false);
+  if (szurt.length) csomopont.append(...szurt);
+  return csomopont;
+}

@@ -69,6 +69,11 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
     assert.equal($('#elonezet .cikk__cim').textContent, 'Őszi menetrend a Gyermekvasúton');
   });
 
+  await t.test('az elhagyott blokkok helyén nem marad „null" szöveg', () => {
+    // Az append(null) beszúrna egy „null" szövegcsomót; a hozzafuz() ezt szűri.
+    assert.ok(!$('#elonezet').textContent.includes('null'), $('#elonezet').textContent.slice(0, 120));
+  });
+
   await t.test('a törzs a cikkoldal előnézetébe kerül', () => {
     const torzsMezo = $('.szerk-textarea--torzs');
     torzsMezo.value = 'Szeptembertől óránként járnak a vonatok.';

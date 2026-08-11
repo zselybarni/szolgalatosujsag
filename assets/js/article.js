@@ -2,7 +2,7 @@
 
 import { LAP } from './config.js';
 import { cikkBetolt } from './content.js';
-import { elem, ikon, urit } from './dom.js';
+import { elem, hozzafuz, ikon, urit } from './dom.js';
 import { datumHosszu, relativDatum } from './format.js';
 
 export async function cikkNezet(tarolo, slug, mindenCikk) {
@@ -22,7 +22,8 @@ export async function cikkNezet(tarolo, slug, mindenCikk) {
 export function cikkRajzol(tarolo, meta, html, mindenCikk, { navigacio = true } = {}) {
   urit(tarolo);
 
-  tarolo.append(
+  hozzafuz(
+    tarolo,
     navigacio
       ? elem('a', { osztaly: 'vissza', href: '#/' }, [
         ikon('ikon-vissza', 'vissza__ikon'),
