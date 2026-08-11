@@ -79,6 +79,44 @@
         </div>
         <p class="szerk-visszajelzes" id="visszajelzes" hidden></p>
         <div id="uzenetek"></div>
+
+        <details class="szerk-kozzetetel" id="kozzetetel">
+          <summary class="szerk-kozzetetel__fej">Közzététel egy kattintással (tokennel)</summary>
+
+          <p class="szerk-sugo">
+            Ezzel a szerkesztő maga küldi be a cikket <strong>és a behúzott képeket</strong>
+            a repóba. Kell hozzá egy GitHub token, ami írhat ebbe a repóba.
+            <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Token készítése</a> —
+            válaszd a <em>Only select repositories</em> alatt ezt a repót, és a
+            <em>Repository permissions → Contents</em> jogot állítsd
+            <em>Read and write</em>-ra. Minden más maradhat érintetlen.
+          </p>
+
+          <label class="szerk-mezo">
+            <span class="szerk-mezo__cimke"><span>Token</span></span>
+            <input class="szerk-input szerk-input--mono" id="token" type="password"
+                   autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+            <span class="szerk-sugo">
+              Csak a memóriában tartjuk. A piszkozatba és a mentésbe soha nem kerül bele.
+            </span>
+          </label>
+
+          <label class="szerk-jelolosor">
+            <input type="checkbox" class="szerk-jelolo" id="token-megjegyez">
+            <span>
+              <strong>Emlékezz rá a lap bezárásáig</strong>
+              <span class="szerk-sugo"> – ilyenkor a böngésző munkamenet-tárolójába kerül. Közös gépen ne használd.</span>
+            </span>
+          </label>
+
+          <div class="szerk-gombsor">
+            <button type="button" class="szerk-gomb" id="token-ellenoriz">Token ellenőrzése</button>
+            <button type="button" class="szerk-gomb szerk-gomb--fo" id="kozzetesz" data-kimenet>Közzététel</button>
+            <button type="button" class="szerk-gomb szerk-gomb--halk" id="token-torol">Token törlése</button>
+          </div>
+
+          <div id="kozzetetel-naplo"></div>
+        </details>
       </section>
 
       <section class="szerk-elonezet">

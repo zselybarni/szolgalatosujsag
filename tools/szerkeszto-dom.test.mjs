@@ -100,7 +100,9 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
   });
 
   await t.test('a hibátlan piszkozatnál a kimeneti gombok élnek', () => {
-    assert.deepEqual($$('[data-kimenet]').map((g) => g.disabled), [false, false, false]);
+    const gombok = $$('[data-kimenet]');
+    assert.ok(gombok.length >= 3, `kevés kimeneti gomb: ${gombok.length}`);
+    assert.ok(gombok.every((g) => !g.disabled), 'valamelyik gomb tiltva maradt');
   });
 
   await t.test('üres címnél hibát jelez és letiltja a kimenetet', () => {
@@ -110,7 +112,16 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
 
     const hibak = $$('.szerk-uzenet--hiba').map((e) => e.textContent);
     assert.ok(hibak.some((h) => h.includes('A cím kötelező')), `nem jelezte a hiányzó címet: ${hibak}`);
-    assert.deepEqual($$('[data-kimenet]').map((g) => g.disabled), [true, true, true]);
+    assert.ok($$('[data-kimenet]').every((g) => g.disabled), 'hibás piszkozatnál is aktív maradt egy gomb');
+  });
+
+  await t.test('a token soha nem kerül a mentett piszkozatba', () => {
+    const tokenMezo = $('#token');
+    tokenMezo.value = 'github_pat_teszt';
+    tokenMezo.dispatchEvent(new window.Event('input', { bubbles: true }));
+
+    const mentett = window.localStorage.getItem('hirfolyam:szerkeszto-piszkozat') ?? '';
+    assert.ok(!mentett.includes('github_pat_teszt'), 'a token bekerült a piszkozatba');
   });
 
   dom.window.close();

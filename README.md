@@ -64,6 +64,41 @@ A kész fájlt **letöltheted**, **vágólapra másolhatod**, vagy **beküldhete
 GitHubon** egy előre kitöltött űrlapon. A szerkesztő a repóba nem ír – az
 indoklás a [0006-os ADR](docs/adr/0006-szerkeszto-nem-ir-a-repoba.md)-ban.
 
+### Közzététel egy kattintással (tokennel)
+
+A „Kimenet" alatt van egy külön felnyitható szakasz, amivel a szerkesztő
+**maga küldi be** a cikket és a behúzott képeket. Egyszeri előkészítés:
+
+1. Nyisd meg a <https://github.com/settings/personal-access-tokens/new> lapot
+   (Settings → Developer settings → Personal access tokens → **Fine-grained**).
+2. **Resource owner:** a saját felhasználód. **Repository access:** *Only select
+   repositories* → `szolgalatosujsag`.
+3. **Repository permissions → Contents:** állítsd *Read and write*-ra. Minden
+   más maradhat érintetlen — ennél több jog nem kell, és ne is adj.
+4. Adj neki lejáratot (például 90 nap), majd *Generate token*, és másold ki.
+5. A szerkesztőben nyisd le a „Közzététel egy kattintással" szakaszt, illeszd be
+   a tokent, és nyomd meg a **Token ellenőrzése** gombot. Ha azt írja, hogy
+   írhat, kész.
+
+Ezután a **Közzététel** gomb: először feltölti a behúzott képeket, majd a cikket,
+és ad egy hivatkozást a commitra. A lap néhány perccel később frissül, amikor a
+közzétételi folyamat lefutott.
+
+A token kezelése szándékosan szűkmarkú:
+
+- **nem kerül a piszkozatba**, tehát a mentésbe sem;
+- alapesetben csak a memóriában él, újratöltéskor elveszik;
+- az „Emlékezz rá a lap bezárásáig" kapcsolóval a böngésző
+  munkamenet-tárolójába kerül, ami a lap bezárásakor törlődik — tartós
+  `localStorage`-ba szándékosan **nem** tesszük;
+- csak `Authorization` fejlécben utazik, a címsorba soha nem kerül;
+- a **Token törlése** gomb azonnal kiüríti mindkét helyről.
+
+> Közös vagy idegen gépen ne pipáld be az emlékezést, és a végén nyomj **Token
+> törlése**t. Ha egy token mégis kikerül, a GitHubon azonnal visszavonható
+> (Settings → Personal access tokens → Revoke), és mivel egyetlen repóra és
+> `Contents` jogra szűkített, más nem nyílik meg vele.
+
 ### Képek feltöltése
 
 A cikk szövege elmegy az előre kitöltött GitHub-űrlapon, mert az szöveg. A kép
@@ -78,6 +113,10 @@ elérhető:
    feltöltőlapját nyitja meg — oda kell behúzni magát a fájlt.
 3. Amíg a kép nincs a repóban, az ellenőrzés figyelmeztetésként emlékeztet rá,
    de nem tiltja le a cikk beküldését.
+
+**Tokennel viszont a képfeltöltés is megy magától**: a Közzététel gomb a behúzott
+képeket is beküldi, mert az API bájtokat fogad, nem fájlválasztót. Ilyenkor az
+1. pont behúzása elég, a 2. pontra nincs szükség.
 
 > A lap nyilvános, ezért a szerkesztő is az. Ez nem gond: legfeljebb szöveget
 > gyárt valakinek a böngészőjében, írási joga nincs. Jelszót szándékosan nem

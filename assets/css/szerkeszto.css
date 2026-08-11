@@ -248,6 +248,26 @@
 
 .szerk-jelzes { margin-left: 8px; font-size: .74rem; color: var(--zold); font-weight: 600; }
 
+/* --- közzététel tokennel ------------------------------------------------- */
+
+.szerk-kozzetetel {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px dashed var(--vonal-eros);
+  border-radius: var(--sugar-kicsi);
+  background: var(--alap-melyebb);
+}
+.szerk-kozzetetel[open] { padding-bottom: 16px; }
+.szerk-kozzetetel__fej {
+  cursor: pointer;
+  font-size: .82rem; font-weight: 650;
+  color: var(--tinta-halvany);
+}
+.szerk-kozzetetel__fej:hover { color: var(--kek); }
+.szerk-kozzetetel > .szerk-sugo { display: block; margin: 12px 0; line-height: 1.5; }
+.szerk-kozzetetel a { color: var(--kek); }
+#kozzetetel-naplo { display: grid; gap: 6px; margin-top: 10px; }
+
 /* --- előnézet ------------------------------------------------------------ */
 
 .szerk-fulek { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }

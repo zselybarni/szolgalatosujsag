@@ -14,6 +14,7 @@ import { temaInditas } from '../theme.js';
 import { allapotLetrehoz, maiNap, uresPiszkozat } from './allapot.js';
 import { ellenoriz, vanHiba } from './ellenorzes.js';
 import { elonezetEpit } from './elonezet.js';
+import { base64Fajl, base64Szoveg, githubKliens, tokenTarolo } from './github.js';
 import { fajlUtvonal, markdownOsszeallit } from './kimenet.js';
 import { urlapEpit } from './urlap.js';
 
@@ -45,8 +46,8 @@ const urlap = urlapEpit(urlapTarolo, allapot, {
   kuratltRovatok,
   helyiKepRogzit: (utvonal, fajl) => {
     const regi = helyiKepek.get(utvonal);
-    if (regi) URL.revokeObjectURL(regi);
-    helyiKepek.set(utvonal, URL.createObjectURL(fajl));
+    if (regi) URL.revokeObjectURL(regi.url);
+    helyiKepek.set(utvonal, { url: URL.createObjectURL(fajl), fajl });
   },
 });
 
@@ -221,12 +222,114 @@ function kimenetKot() {
     window.open(cim, '_blank', 'noopener');
   });
 
+  kozzetetelKot();
+
   document.getElementById('uj').addEventListener('click', () => {
     if (!window.confirm('Biztosan új cikket kezdesz? A mostani piszkozat elveszik.')) return;
     cikkValaszto.value = '';
     allapot.mentettTorol();
     allapot.csere(uresPiszkozat());
   });
+}
+
+/* --- közzététel tokennel ------------------------------------------------- */
+
+function kozzetetelKot() {
+  const tokenMezo = document.getElementById('token');
+  const megjegyezMezo = document.getElementById('token-megjegyez');
+  const naplo = document.getElementById('kozzetetel-naplo');
+
+  // Ha a munkamenetben már megadták, ne kelljen újra beírni.
+  if (tokenTarolo.megjegyzett()) {
+    tokenMezo.value = tokenTarolo.olvas();
+    megjegyezMezo.checked = true;
+  }
+
+  const tokenBe = () => {
+    tokenTarolo.ir(tokenMezo.value.trim(), { megjegyez: megjegyezMezo.checked });
+    return tokenTarolo.olvas();
+  };
+
+  tokenMezo.addEventListener('input', tokenBe);
+  megjegyezMezo.addEventListener('change', tokenBe);
+
+  document.getElementById('token-torol').addEventListener('click', () => {
+    tokenTarolo.torol();
+    tokenMezo.value = '';
+    megjegyezMezo.checked = false;
+    naplot(naplo, 'A token törölve.', 'info');
+  });
+
+  document.getElementById('token-ellenoriz').addEventListener('click', async () => {
+    const token = tokenBe();
+    if (!token) { naplot(naplo, 'Előbb írd be a tokent.', 'hiba'); return; }
+    try {
+      const adat = await githubKliens({ token, repo: REPO }).repoEllenoriz();
+      naplot(
+        naplo,
+        adat.irhat
+          ? `Rendben: ${adat.nev}, ág: ${adat.ag}. A token írhat.`
+          : `Elérés megvan (${adat.nev}), de a token nem kapott írási jogot.`,
+        adat.irhat ? 'rendben' : 'hiba',
+      );
+    } catch (hiba) {
+      naplot(naplo, hiba.message, 'hiba');
+    }
+  });
+
+  document.getElementById('kozzetesz').addEventListener('click', async () => {
+    const token = tokenBe();
+    if (!token) { naplot(naplo, 'Előbb írd be a tokent.', 'hiba'); return; }
+
+    const piszkozat = allapot.get();
+    const gomb = document.getElementById('kozzetesz');
+    gomb.disabled = true;
+    urit(naplo);
+
+    try {
+      const kliens = githubKliens({ token, repo: REPO });
+      await kliens.repoEllenoriz();
+
+      // Először a képek: ha a cikk hivatkozik rájuk, legyenek már a helyükön.
+      for (const [utvonal, { fajl }] of [...helyiKepek]) {
+        naplot(naplo, `Kép feltöltése: ${utvonal}…`, 'info');
+        await kliens.fajlKiir({
+          utvonal,
+          base64: await base64Fajl(fajl),
+          uzenet: `Kép: ${utvonal.split('/').pop()}`,
+        });
+        helyiKepek.delete(utvonal);
+        kepek.push({ path: utvonal, nev: utvonal.split('/').pop() });
+      }
+
+      const utvonal = fajlUtvonal(piszkozat);
+      const eredmeny = await kliens.fajlKiir({
+        utvonal,
+        base64: base64Szoveg(markdownOsszeallit(piszkozat)),
+        uzenet: `${piszkozat.eredetiSlug === piszkozat.slug ? 'Cikk módosítása' : 'Új cikk'}: ${piszkozat.title}`,
+      });
+
+      naplot(naplo, `${eredmeny.uj ? 'Beküldve' : 'Módosítva'}: ${utvonal}`, 'rendben');
+      if (eredmeny.commitCim) {
+        naplo.append(elem('p', { osztaly: 'szerk-uzenet szerk-uzenet--info' }, [
+          elem('a', { href: eredmeny.commitCim, target: '_blank', rel: 'noopener', szoveg: 'A commit megnyitása a GitHubon' }),
+        ]));
+      }
+      naplot(naplo, 'A lap a közzétételi folyamat lefutása után frissül (néhány perc).', 'info');
+
+      allapot.mentettTorol();
+      allapot.frissit({ eredetiSlug: piszkozat.slug });
+    } catch (hiba) {
+      naplot(naplo, hiba.message, 'hiba');
+    } finally {
+      gomb.disabled = false;
+      uzenetekRajzol(allapot.get());
+    }
+  });
+}
+
+function naplot(tarolo, szoveg, szint) {
+  tarolo.append(elem('p', { osztaly: `szerk-uzenet szerk-uzenet--${szint}`, szoveg }));
 }
 
 function visszajelzes(szoveg, baj = false) {

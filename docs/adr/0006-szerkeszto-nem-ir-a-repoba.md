@@ -1,8 +1,9 @@
-# A szerkesztő nem ír a repóba
+# A szerkesztő alapesetben nem ír a repóba
 
-A `szerkeszto.html` összeállítja a kész `.md` fájlt, de nem menti el: letölthető,
-vágólapra másolható, illetve egy előre kitöltött GitHub-űrlapon beküldhető. A
-commitot ember csinálja.
+A `szerkeszto.html` összeállítja a kész `.md` fájlt, de alapesetben nem menti
+el: letölthető, vágólapra másolható, illetve egy előre kitöltött GitHub-űrlapon
+beküldhető. A commitot ember csinálja. (A tokenes kivételről lásd a lap alján
+lévő frissítést.)
 
 ## Miért nem ír közvetlenül
 
@@ -13,9 +14,27 @@ számítógépen ez a repó írási kulcsának kiszórása. A letöltés és a
 vágólap ehhez képest semmilyen jogosultságot nem igényel, telefonról is
 működik, és a beküldés így is egyetlen lépés a GitHub felületén.
 
-Ha egyszer mégis kell az egykattintásos közzététel, a helyes irány nem a
-böngészőbe rejtett token, hanem egy külön, hitelesített kis kiszolgáló – az
-viszont már nem statikus lap.
+## Frissítés: a tokenes út mégis bekerült, választhatóan
+
+A szerkesztő kapott egy **külön nyitható** „Közzététel egy kattintással"
+szakaszt, amiben megadható egy írási jogú token, és onnantól a szerkesztő maga
+küldi be a cikket és a behúzott képeket a Contents API-n.
+
+Ez nem vonja vissza a fentieket: a letöltés maradt az alapértelmezett és
+javasolt út, a tokenes csak egy tudatosan felnyitott lehetőség. A fenti
+kockázatot a tárolás módja szorítja a lehető legkisebbre:
+
+- a token **nem része a piszkozatnak**, ezért a mentésbe sem kerül bele;
+- alapesetben csak a memóriában van, újratöltéskor elveszik;
+- kérésre `sessionStorage`-ba megy, ami a lap bezárásakor törlődik –
+  `localStorage`-ba szándékosan nem, mert az ott maradna a gépen;
+- csak `Authorization` fejlécben utazik, címben soha, és a „Token törlése"
+  gomb azonnal kiüríti mindkét helyről.
+
+A javasolt token finomhangolt (fine-grained), egyetlen repóra szűkítve, és
+csak `Contents: Read and write` joggal – így akkor sem nyílik semmi más, ha
+mégis kiszivárog. Az igazán biztonságos megoldás továbbra is egy külön,
+hitelesített kiszolgáló volna, az viszont már nem statikus lap.
 
 ## Következmény
 

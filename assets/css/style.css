@@ -93,6 +93,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* A `hidden` attribútum csak `display: none`-t jelent a böngésző saját
+   stíluslapjában, amit bármelyik osztályszabály (például `display: flex`)
+   felülír – így az elrejtett sáv csak kiürült, de a helyén maradt.
+   Ez a szabály visszaadja a `hidden` értelmét. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {

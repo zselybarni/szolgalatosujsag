@@ -93,7 +93,7 @@ export function elonezetEpit(tarolo, { markdownForras, mindenCikk = [], helyiKep
     if (!helyiKepek.size) return;
     for (const kep of gyoker.querySelectorAll('img')) {
       const helyi = helyiKepek.get(kep.getAttribute('src'));
-      if (helyi) kep.src = helyi;
+      if (helyi) kep.src = helyi.url;
     }
   }
 
