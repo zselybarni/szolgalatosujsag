@@ -1,10 +1,9 @@
 ---
-title: Barnabás feneke nagy
+title: Nosztalgiavonat gőzössel a Hárs-hegyi alagúton át
 date: 2026-08-02
 lead: >
   A vonal legizgalmasabb pontja a 198 méteres Hárs-hegyi alagút. A
-  nosztalgiavonat lassítva halad át rajta, hogy a fütty
-  visszhangozzon. Nosztalgiavonat gőzössel a Hárs-hegyi alagúton át
+  nosztalgiavonat lassítva halad át rajta, hogy a fütty visszhangozzon.
 section: Vasút
 author: Szerkesztőség
 cover: content/images/hars-hegyi-alagut.svg
