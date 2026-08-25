@@ -21,7 +21,7 @@ Na, húzz sorszámot és ülj oda!
 Csak bámulom a falat,  
 Milyen csúnya!
 
-Refrén  
+**Refrén:**  
 Itt van már, csak téged vár  
 WestWest gróf kastélya készen áll  
 Hát jóban lesz majd így a hat, a kilenc és a tíz  
@@ -41,7 +41,7 @@ Nem kolbászból van a kerítés
 Tervezzük meg együtt a menekvést  
 És nyitnánk már a kaput, de az zárva.
 
-Refrén  
+**Refrén**  
 És itt van, itt van, itt van már, csak téged vár  
 WestWest gróf kastélya készen áll  
 Hát jóban lesz majd így (West-West-West-West)  
