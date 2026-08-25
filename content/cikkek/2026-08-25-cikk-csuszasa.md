@@ -1,5 +1,5 @@
 ---
-title: Cikk csúszása
+title: 9. szám csúszása
 date: 2026-08-25
 lead: >
   Miért csúszott a 9. szám? Mi volt a háttérben?
@@ -10,6 +10,6 @@ featured: true
 tags: [tábor, nyár]
 ---
 
-Legutóbbi számunk azért maradt el mivel nem tudtuk időben megcsinálni mivel
-A3-as méretben szerettük volna megcsinálni. Nagyon sajnáljuk. Ugyanakkor viszont
-meg van az online újság. Kellemes olvasgatást!
+Legutóbbi számunk azért maradt el mivel nem tudtuk időben megcsinálni, mert
+A3-as méretben szerettük volt elkészíteni. Nagyon sajnáljuk. Ugyanakkor viszont
+megvan az online újság. Kellemes olvasgatást!
