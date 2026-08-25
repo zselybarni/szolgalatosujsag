@@ -7,9 +7,9 @@ section: ballagás
 tags: [nosztalgia, tábor]
 ---
 
-Kedves ballagók!
+Kedves Ballagók!
 
-Nagyon remélem, hogy jól telt a nyaratok és a táborotok, de elérkezett. Szomorú
-és megható pillanat ez. Ballagás. Akik itt maradnak azoknak megható, akik meg
-ballagnak azoknak pedig megható és szomorú is. Nehéz ez. Minden ballagó
-hiányozni fog nekünk. Hajrá! Sok szerencsét!
+Nagyon remélem, hogy jól telt a nyaratok és a táborotok, de elérkezett az utolsó
+szolgálatotok napja. Szomorú és megható pillanat ez. Ballagás. Akik itt maradnak
+azoknak megható, akik meg ballagnak azoknak pedig megható és szomorú is
+egyaránt. Nehéz ez. Minden ballagó hiányozni fog nekünk. Hajrá! Sok szerencsét!
