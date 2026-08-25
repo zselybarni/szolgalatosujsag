@@ -5,6 +5,7 @@ lead: >
   Az újranyitott vonal a helyieknek nagy örömet okoz.
 section: Vasút
 author: Forgalmi rovat
+featured: true
 tags: [nosztalgia, gőzös, menetrend, forgalom]
 ---
 
