@@ -1,45 +1,20 @@
 ---
-title: Rekordot döntött a nyári forgalom a Gyermekvasúton
-date: 2026-08-09
-section: Vasút
-author: Szerkesztőség
+title: Cikk csúszása
+date: 2026-08-25
 lead: >
-  Az augusztus első hétvégéjén közlekedő vonatok minden eddiginél több
-  utast szállítottak Széchenyihegy és Hűvösvölgy között. A forgalmi
-  szolgálat hétvégenként két szerelvénnyel dolgozik.
-cover: content/images/nyari-forgalom.svg
-coverAlt: Zöld hegyoldalban kanyargó vonat a Gyermekvasút pályáján
+  Miért csúszott a 9. szám? Mi volt a háttérben?
+section: újság számok
+author: Szerkesztőség
+cover: content/images/OIP.webp
 featured: true
-tags: [forgalom, nyár, menetrend]
+tags: [tábor, nyár]
 ---
 
-A 11,2 kilométeres vonal augusztus első hétvégéjén minden korábbinál több utast
-vitt. A hőség elől a hegyekbe menekülő kirándulók már a nyitás előtt sorban
-álltak a széchenyihegyi pénztárnál, a délelőtti vonatok pedig végig teltházzal
-közlekedtek.
+Mi is sajnáljuk, hogy jubileumi számunk elmaradt de ezt pótoljuk!
 
-## Két szerelvény a csúcsidőben
+Viszont most már itt van ez az online újságunk!
 
-A forgalmi szolgálat a nyári hétvégéken két szerelvényt indít. A vonatok
-Virágvölgyben és Szépjuhásznén keresztezik egymást, így a menetrend sűrűsödik
-anélkül, hogy az egyvágányú pályán torlódás alakulna ki.
-
-| Indulás Széchenyihegyről | Érkezés Hűvösvölgybe | Keresztezés |
-| --- | --- | --- |
-| 9:00 | 9:45 | Virágvölgy |
-| 10:00 | 10:45 | Szépjuhászné |
-| 11:00 | 11:45 | Virágvölgy |
-
-## Amire a hétvégén érdemes figyelni
-
-- A jegypénztárak nyitás előtt negyed órával kezdik a kiszolgálást.
-- A kerékpárszállítás csak a hűvösvölgyi irányban, korlátozott számban lehetséges.
-- Csúcsidőben a Jánoshegy megállóban érdemes felszállni, ott ritkábban telik meg
-  a szerelvény.
-
-> A legnagyobb forgalmat nem a hőség, hanem a jó látási viszonyok hozzák — a
-> János-hegyi kilátóhoz igyekvő kirándulók teszik ki az utasok harmadát.
-
-A szolgálatot adó gyermekvasutasok a nyári hónapokban váltásban dolgoznak: a
-turnusok a hűvösvölgyi Gyermekvasutas Otthonból indulnak, és ugyanoda térnek
-vissza a szolgálat végén.
+Azért maradt el 9. számunk, mert nem tudtunk elkészülni vele, mivel ezt A3-as
+méretben terveztük, és ez rengeteg időt vett igénybe. Ezt mi is nagyon
+sajnáljuk! Tervünk szerint ezt a 27-edikei szolgálatban fogjuk kiadni. Ebből
+minden ballagó fog sajátot kapni.
