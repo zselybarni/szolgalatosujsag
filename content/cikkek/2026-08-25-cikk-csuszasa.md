@@ -6,10 +6,9 @@ lead: >
 section: újság számok
 author: Szerkesztőség
 cover: content/images/OIP.webp
-featured: true
 tags: [tábor, nyár]
 ---
 
-Legutóbbi számunk azért maradt el mivel nem tudtuk időben megcsinálni, mert
+Legutóbbi számunk azért maradt el, mert nem tudtuk időben megcsinálni, mivel
 A3-as méretben szerettük volna elkészíteni. Nagyon sajnáljuk. Ugyanakkor viszont
 megvan az online újság. Kellemes olvasgatást!
