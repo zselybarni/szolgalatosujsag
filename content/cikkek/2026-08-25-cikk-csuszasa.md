@@ -11,5 +11,5 @@ tags: [tábor, nyár]
 ---
 
 Legutóbbi számunk azért maradt el mivel nem tudtuk időben megcsinálni, mert
-A3-as méretben szerettük volt elkészíteni. Nagyon sajnáljuk. Ugyanakkor viszont
+A3-as méretben szerettük volna elkészíteni. Nagyon sajnáljuk. Ugyanakkor viszont
 megvan az online újság. Kellemes olvasgatást!
