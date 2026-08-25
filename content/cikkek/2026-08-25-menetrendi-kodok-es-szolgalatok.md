@@ -6,8 +6,6 @@ lead: >
   és mi a menetrendi kód aznap. Itt vannak a válaszok!
 section: gyermekvasút
 author: Forgalmi rovat
-cover: content/images/huvosvolgyi-otthon.svg
-coverAlt: A hűvösvölgyi Gyermekvasutas Otthon épülete fák között
 featured: true
 tags: [forgalom, szolgálat, menetrend]
 ---
