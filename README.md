@@ -61,6 +61,10 @@ Amit tud:
   tényleges szerkesztés, és két hét után a mentés elévül.
 - **Meglévő cikk szerkesztése** — a legördülő listából betölthető bármelyik
   megjelent (és ütemezett) cikk.
+- **Cikk törlése** — a betöltött, már megjelent cikk kivehető a repóból. Tokennel
+  a szerkesztő maga küldi be a törlést (rákérdez), token nélkül a GitHub saját
+  törlőlapját nyitja meg, ahol a commitot te hagyod jóvá. Új, még be nem küldött
+  piszkozatnál a gomb nem él – azt az „Új cikk" dobja el.
 - **Ctrl+Z** — a szerkesztő az eszköztár műveleteit is a böngésző saját
   visszavonási sorába teszi, így a gombokkal beszúrt szöveg is visszavonható.
 
@@ -87,6 +91,10 @@ A „Kimenet" alatt van egy külön felnyitható szakasz, amivel a szerkesztő
 Ezután a **Közzététel** gomb: először feltölti a behúzott képeket, majd a cikket,
 és ad egy hivatkozást a commitra. A lap néhány perccel később frissül, amikor a
 közzétételi folyamat lefutott.
+
+Ugyanez a token viszi a **Cikk törlése** gombot is: a betöltött cikk fájlját
+törli a repóból – rákérdezés után, és csak akkor, ha a fájl közben nem változott
+meg. A törlés eredménye ugyanide, a szakasz naplójába kerül.
 
 A token kezelése szándékosan szűkmarkú:
 

@@ -154,6 +154,22 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
     assert.ok(!mentett.includes('github_pat_teszt'), 'a token bekerült a piszkozatba');
   });
 
+  await t.test('a törlés gomb csak a repóban lévő cikknél él', async () => {
+    const torles = $('#torles');
+    assert.ok(torles, 'nincs törlés gomb a kimenetben');
+    assert.ok(torles.disabled, 'a be nem küldött piszkozatnál is aktív a törlés');
+
+    // Meglévő cikk betöltése a legördülő listából.
+    const valaszto = $('#cikk-valaszto');
+    valaszto.value = valaszto.options[1].value;
+    valaszto.dispatchEvent(new window.Event('change', { bubbles: true }));
+    await varj();
+
+    assert.equal($('#fajl-nev').textContent, `content/cikkek/${valaszto.value}.md`);
+    assert.ok(!torles.disabled, 'betöltött cikknél sem lehetett törölni');
+    assert.match(torles.title, /törlése a repóból/);
+  });
+
   dom.window.close();
 });
 

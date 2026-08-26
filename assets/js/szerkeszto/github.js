@@ -63,7 +63,7 @@ function sessionTorol() {
 export function githubKliens({ token, repo, kerdez = (...ervek) => fetch(...ervek) }) {
   const alap = `${API}/repos/${repo.tulajdonos}/${repo.nev}`;
 
-  return { repoEllenoriz, fajlKiir };
+  return { repoEllenoriz, fajlKiir, fajlTorol };
 
   /** Van-e egyáltalán elérés és írási jog. */
   async function repoEllenoriz() {
@@ -104,6 +104,30 @@ export function githubKliens({ token, repo, kerdez = (...ervek) => fetch(...erve
 
     const adat = await valasz.json();
     return { uj: !sha, commitCim: adat.commit?.html_url ?? null };
+  }
+
+  /**
+   * Fájl törlése a repóból. A GitHub ehhez is a mostani `sha`-t kéri, tehát a
+   * törlés ugyanúgy ütközik, ha közben más módosította a fájlt – vakon nem
+   * törlünk el semmit.
+   *
+   * @returns {Promise<{ commitCim: string|null }>}
+   */
+  async function fajlTorol({ utvonal, uzenet }) {
+    const cim = `${alap}/contents/${utvonal.split('/').map(encodeURIComponent).join('/')}`;
+    const sha = await meglevoSha(cim);
+    if (!sha) throw new Error('Ez a fájl már nincs a repóban – nincs mit törölni.');
+
+    const valasz = await kerdez(cim, {
+      method: 'DELETE',
+      headers: { ...fejlec(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: uzenet, sha, branch: repo.ag }),
+    });
+
+    if (!valasz.ok) throw hibabol(valasz, await torzsSzoveg(valasz));
+
+    const adat = await valasz.json();
+    return { commitCim: adat.commit?.html_url ?? null };
   }
 
   async function meglevoSha(cim) {

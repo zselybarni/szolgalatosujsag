@@ -20,6 +20,12 @@ A szerkesztő kapott egy **külön nyitható** „Közzététel egy kattintássa
 szakaszt, amiben megadható egy írási jogú token, és onnantól a szerkesztő maga
 küldi be a cikket és a behúzott képeket a Contents API-n.
 
+Ugyanez a token **törölni** is tud: a legördülő listából betöltött cikk fájlja
+egy gombbal kivehető a repóból (a szerkesztő előtte rákérdez, és a GitHub a
+mostani `sha`-t is megköveteli, tehát közben módosított fájlt nem töröl el).
+Token nélkül a törlés ugyanoda kerül, ahová a beküldés: a szerkesztő a GitHub
+saját törlőlapját nyitja meg, a commitot ott hagyja jóvá az ember.
+
 Ez nem vonja vissza a fentieket: a letöltés maradt az alapértelmezett és
 javasolt út, a tokenes csak egy tudatosan felnyitott lehetőség. A fenti
 kockázatot a tárolás módja szorítja a lehető legkisebbre:

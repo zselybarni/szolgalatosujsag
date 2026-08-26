@@ -61,6 +61,7 @@ allapot.figyel((piszkozat) => {
   urlap.frissit(piszkozat);
   elonezet.frissit(piszkozat);
   uzenetekRajzol(piszkozat);
+  torlesGombFrissit(piszkozat);
 });
 
 cikkValasztoFeltolt();
@@ -222,6 +223,7 @@ function kimenetKot() {
     window.open(cim, '_blank', 'noopener');
   });
 
+  torlesKot();
   kozzetetelKot();
 
   document.getElementById('uj').addEventListener('click', () => {
@@ -230,6 +232,84 @@ function kimenetKot() {
     allapot.mentettTorol();
     allapot.csere(uresPiszkozat());
   });
+}
+
+/* --- meglévő cikk törlése ------------------------------------------------ */
+
+/**
+ * Törölni csak azt lehet, ami a repóban már fent van: a legördülő listából
+ * betöltött cikket. A még be nem küldött piszkozatnak nincs mit törölni – azt
+ * az „Új cikk" gomb dobja el.
+ *
+ * A gomb szándékosan nem `data-kimenet`: egy hibás fejlécű cikket is ki kell
+ * tudni venni a repóból, épp azért, mert hibás.
+ */
+function torlesGombFrissit(piszkozat) {
+  const gomb = document.getElementById('torles');
+  gomb.disabled = !piszkozat.eredetiSlug;
+  gomb.title = piszkozat.eredetiSlug
+    ? `${fajlUtvonal({ slug: piszkozat.eredetiSlug })} törlése a repóból`
+    : 'Csak a legördülő listából betöltött, már megjelent cikk törölhető';
+}
+
+function torlesKot() {
+  const gomb = document.getElementById('torles');
+
+  gomb.addEventListener('click', async () => {
+    const piszkozat = allapot.get();
+    // A fájl a *betöltött* néven van fent: ha közben átírták a címet, a
+    // piszkozat slugja már másra mutatna.
+    const slug = piszkozat.eredetiSlug;
+    if (!slug) return;
+
+    const utvonal = fajlUtvonal({ slug });
+    const token = tokenTarolo.olvas();
+
+    // Token nélkül a GitHub saját törlőlapja kérdez rá, ugyanúgy, ahogy a
+    // beküldést is ott hagyja jóvá az ember.
+    if (!token) {
+      window.open(`https://github.com/${REPO.tulajdonos}/${REPO.nev}/delete/${REPO.ag}/${utvonal}`, '_blank', 'noopener');
+      visszajelzes('A GitHub törlőlapja megnyílt – ott erősítsd meg a törlést.');
+      return;
+    }
+
+    const kerdes = `Biztosan törlöd a repóból ezt a cikket?\n\n${utvonal}\n\n`
+      + 'A törlés azonnal commitba kerül, a szerkesztőben lévő piszkozat pedig elveszik.';
+    if (!window.confirm(kerdes)) return;
+
+    const naplo = document.getElementById('kozzetetel-naplo');
+    // A napló a tokenes szakaszban él: ha csukva van, a visszajelzés elveszne.
+    document.getElementById('kozzetetel').open = true;
+    gomb.disabled = true;
+    urit(naplo);
+
+    try {
+      const eredmeny = await githubKliens({ token, repo: REPO }).fajlTorol({
+        utvonal,
+        uzenet: `Cikk törlése: ${piszkozat.title || slug}`,
+      });
+
+      naplot(naplo, `Törölve: ${utvonal}`, 'rendben');
+      commitHivatkozas(naplo, eredmeny.commitCim);
+      naplot(naplo, 'A lap a közzétételi folyamat lefutása után frissül (néhány perc).', 'info');
+
+      cikkListabolTorol(slug);
+      allapot.mentettTorol();
+      allapot.csere(uresPiszkozat());
+    } catch (hiba) {
+      naplot(naplo, hiba.message, 'hiba');
+    } finally {
+      torlesGombFrissit(allapot.get());
+    }
+  });
+}
+
+/** A törölt cikk a legördülő listából és az ellenőrzés alapjából is kikerül. */
+function cikkListabolTorol(slug) {
+  const helye = mindenCikk.findIndex((cikk) => cikk.slug === slug);
+  if (helye >= 0) mindenCikk.splice(helye, 1);
+  [...cikkValaszto.options].find((lehetoseg) => lehetoseg.value === slug)?.remove();
+  cikkValaszto.value = '';
 }
 
 /* --- közzététel tokennel ------------------------------------------------- */
@@ -310,11 +390,7 @@ function kozzetetelKot() {
       });
 
       naplot(naplo, `${eredmeny.uj ? 'Beküldve' : 'Módosítva'}: ${utvonal}`, 'rendben');
-      if (eredmeny.commitCim) {
-        naplo.append(elem('p', { osztaly: 'szerk-uzenet szerk-uzenet--info' }, [
-          elem('a', { href: eredmeny.commitCim, target: '_blank', rel: 'noopener', szoveg: 'A commit megnyitása a GitHubon' }),
-        ]));
-      }
+      commitHivatkozas(naplo, eredmeny.commitCim);
       naplot(naplo, 'A lap a közzétételi folyamat lefutása után frissül (néhány perc).', 'info');
 
       allapot.mentettTorol();
@@ -326,6 +402,13 @@ function kozzetetelKot() {
       uzenetekRajzol(allapot.get());
     }
   });
+}
+
+function commitHivatkozas(tarolo, cim) {
+  if (!cim) return;
+  tarolo.append(elem('p', { osztaly: 'szerk-uzenet szerk-uzenet--info' }, [
+    elem('a', { href: cim, target: '_blank', rel: 'noopener', szoveg: 'A commit megnyitása a GitHubon' }),
+  ]));
 }
 
 function naplot(tarolo, szoveg, szint) {
