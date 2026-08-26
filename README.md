@@ -245,21 +245,26 @@ statikus tárhelyen nem tudjuk átírni, ezért a kliens kér másképp:
   (`…/cikk.md?v=6cde6d25`), így a fájl gyorsítótárazható marad, a módosítása
   viszont új címet kap.
 
-Egy nyitva felejtett fül ettől még a betöltéskori lapot mutatná – hiába friss
-minden kérés, ha nincs kérés –, ezért a lap a visszatérő olvasónál (fülváltás,
-ablakra kattintás, vissza-gomb) újra megnézi a jegyzéket. Ha közben új cikk
-jelent meg, egy gombbal **szól**, de a hírfolyamot magától nem rendezi át: a
-csere az olvasó kattintására történik. A két kérdezés közti szünet a
-`config.js`-ben állítható (`HIRFOLYAM.frissitesPercek`, alapból 5 perc;
-nullával kikapcsol).
+Egy nyitva hagyott lap ettől még a betöltéskori számot mutatná – hiába friss
+minden kérés, ha nincs kérés –, ezért a lap magától is körülnéz:
+`HIRFOLYAM.frissitesPercek` sűrűséggel (alapból 2 perc), amíg látszik, és akkor
+is, amikor az olvasó visszatér egy félretett fülhöz. Ha közben változott a lap,
+egy gombbal **szól**: az új cikket megszámolja, a módosultat megnevezi (egy
+átírt törzstől a kártyák mit sem változnak, kár lenne azt hinni, hogy a gomb
+nem csinált semmit). A hírfolyamot viszont magától nem rendezi át – a csere és
+a lap tetejére ugrás az olvasó kattintására történik. A `config.js`-ben
+`HIRFOLYAM.frissitesPercek: 0` kikapcsolja az egészet.
 
 A részletek és az elvetett megoldások a
 [0008-as ADR](docs/adr/0008-friss-tartalom-a-gyorsitotar-ellenere.md)-ban. Két
 dolgot érdemes fejben tartani:
 
-- **A lap kódja (`.js`, `.css`) négy óráig ragadhat** a visszatérő olvasónál.
-  A cikkek megjelenését ez nem gátolja, de egy felületi változás ennyit
-  késhet.
+- **A lap kódja (`.js`, `.css`)** a Pages fejléce szerint négy óráig ragadna a
+  visszatérő olvasónál. Ezt a lap előtt álló Cloudflare oldja meg: egy
+  gyorsítótár-szabály az `/assets/` és `/vendor/` alatt 300 másodperces
+  böngésző-TTL-t ír elő. Ha a szabály eltűnik, egy kódváltozás akár négy órát
+  is késhet a visszatérő olvasónál – a cikkek megjelenését viszont ez sem
+  gátolja.
 - **Képet ne cseréljünk azonos néven.** A cím a kép azonosítója; azonos néven
   feltöltött új kép négy óráig a régi maradhat. Új képhez új fájlnevet.
 

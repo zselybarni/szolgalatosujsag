@@ -32,16 +32,23 @@ Amit a kiszolgálón nem tudunk állítani, azt a kérés oldalán állítjuk:
 
 ## A nyitva felejtett lap
 
-A fenti kettő minden *betöltésnél* friss tartalmat ad, csakhogy egy háttérben
-hagyott fül sosem tölt be újra: hiába friss minden kérés, ha nincs kérés. Ezért
-amikor a lap újra láthatóvá válik – fülváltás, ablakra kattintás, vissza-gomb –,
-`assets/js/frissites.js` újraolvassa a jegyzéket, legfeljebb `frissitesPercek`
-gyakorisággal.
+A fenti kettő minden *betöltésnél* friss tartalmat ad, csakhogy egy nyitva
+hagyott lap sosem tölt be újra: hiába friss minden kérés, ha nincs kérés. Ezért
+`assets/js/frissites.js` `frissitesPercek` sűrűséggel újraolvassa a jegyzéket,
+amíg a lap látszik, és akkor is, amikor újra láthatóvá válik – fülváltás,
+ablakra kattintás, vissza-gomb. Csak a visszatérésre figyelni kevés volt: aki a
+lapon ülve várja a saját, épp közzétett cikkét, sosem váltana fület. Egy
+ellenőrzés a 304 miatt bájtban nulla, ezért lehet ilyen sűrű.
 
 Ha változott, **szólunk, nem cserélünk**: a lap alján felbukkan a frissítési
-ajánlat, és a hírfolyamot az olvasó kattintása rajzolja újra. Az automatikus
-csere elvesző görgetési helyet, becsukódó „Továbbiak”-at és a szeme előtt
-elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
+ajánlat, és a hírfolyamot az olvasó kattintása rajzolja újra – utána a lap
+tetejére ugrunk, mert a változás ott van, az olvasó viszont bárhol tarthat. Az
+automatikus csere elvesző görgetési helyet, becsukódó „Továbbiak”-at és a szeme
+előtt elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
+
+Az ajánlat felirata megnevezi a módosult cikket („Frissült: A C50-eseink”),
+mert egy átírt törzstől a kártyák mit sem változnak: a puszta „Frissült a lap”
+után az olvasó joggal hinné, hogy a gomb nem csinált semmit.
 
 ## Miért nem másképp
 
@@ -60,19 +67,35 @@ elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
 
 - Új és módosított cikk azonnal látszik, amint a közzétételi folyamat lefutott;
   az olvasónak nem kell frissítenie (`Ctrl+F5`).
-- Betöltésenként egy feltételes kérés a jegyzékre, és legfeljebb
-  `frissitesPercek`-enként egy a visszatérő olvasónál. Ez a 304 miatt bájtban
-  nulla, időben egy kérésnyi.
+- Betöltésenként egy feltételes kérés a jegyzékre, és `frissitesPercek`-enként
+  egy a nyitva hagyott lapon. Ez a 304 miatt bájtban nulla, időben egy
+  kérésnyi.
 - A jegyzék újraolvasásakor a megváltozott cikkek kirajzolt törzsét eldobjuk a
   memóriából is: a slug ugyanaz maradt, a szöveg viszont nem.
 - A `verzio` a `tools/build-index.mjs` dolga, a `generalva` mezőhöz hasonlóan
   építési adat, ezért – a [0004](0004-magyar-kod-angol-fejlecmezok.md) szerint –
   magyar nevű: nem a cikk fejlécéből jön.
-- **A lap saját kódja (`.js`, `.css`) továbbra is négy óráig ragadhat** a
-  visszatérő olvasónál. A cikkek megjelenését ez nem gátolja – azokat a friss
-  jegyzékből szedi a kód –, egy kódváltozás viszont ennyit késhet. Feloldani
-  csak verziózott eszközcímekkel lehetne, ami ES-modulok mellett vagy építési
-  lépést, vagy importtérképet kíván; ezt nem vállaltuk be.
+- **A lap saját kódja (`.js`, `.css`) a Pages fejléce szerint négy óráig
+  ragadna** a visszatérő olvasónál. A cikkek megjelenését ez nem gátolja –
+  azokat a friss jegyzékből szedi a kód –, egy kódváltozás viszont ennyit
+  késne. Nem elméleti kellemetlenség: éppen ez keltette azt a látszatot, hogy
+  a fenti javítás közzététel után sem működik (a böngésző a régi `content.js`-t
+  futtatta tovább).
+
+  A lap Cloudflare mögül szolgál ki, ezért ezt ott oldottuk meg, kód nélkül:
+  egy gyorsítótár-szabály (Caching → Cache Rules) az `/assets/` és `/vendor/`
+  alatt a **böngésző-TTL-t 300 másodpercre** írja felül, az él gyorsítótárát
+  érintetlenül hagyva. Ellenőrizni így lehet:
+
+  ```bash
+  curl -sI https://szolgalatosujsag.hu/assets/js/content.js | grep -i cache-control
+  # cache-control: max-age=300     – nem 14400
+  ```
+
+  Ha a lap egyszer Cloudflare nélkül szolgálna ki, ez a szabály elveszik, és
+  visszatér a négy óra. Kódból csak verziózott eszközcímek oldanák meg, ami
+  ES-modulok mellett a jegyzéképítő által írt importtérképet kívánna – ezt
+  addig nem vállaltuk be, amíg egyetlen kattintásnyi beállítás megteszi.
 - **A képek** neve a címük: ha egy meglévő képet más tartalommal, azonos néven
   töltünk fel, az olvasónál négy óráig a régi maradhat. Csere helyett tehát új
   fájlnevet adjunk.
