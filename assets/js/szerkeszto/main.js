@@ -7,7 +7,7 @@
  */
 
 import { LAP, REPO, UTVONALAK } from '../config.js';
-import { jegyzekBetolt } from '../content.js';
+import { cikkTorzsLetolt, jegyzekBetolt } from '../content.js';
 import { elem, urit } from '../dom.js';
 import { datumHosszu, ora } from '../format.js';
 import { temaInditas } from '../theme.js';
@@ -88,7 +88,9 @@ async function adatokBetolt() {
 
 async function keres(utvonal, tartalek) {
   try {
-    const valasz = await fetch(utvonal, { headers: { Accept: 'application/json' } });
+    // Mint a cikkjegyzéknél: a kiszolgáló mondja meg, változott-e a fájl –
+    // különben egy frissen feltöltött kép tíz percig hiányozna a listából.
+    const valasz = await fetch(utvonal, { headers: { Accept: 'application/json' }, cache: 'no-cache' });
     return valasz.ok ? await valasz.json() : tartalek;
   } catch {
     return tartalek;
@@ -127,7 +129,7 @@ function cikkValasztoFeltolt() {
     const cikk = mindenCikk.find((c) => c.slug === slug);
     if (!cikk) return;
 
-    const torzs = await cikkTorzsBetolt(cikk.path);
+    const torzs = await cikkTorzsBetolt(cikk);
     allapot.csere({
       ...cikk,
       lead: cikk.lead ?? '',
@@ -143,13 +145,16 @@ function cikkValasztoFeltolt() {
   });
 }
 
-async function cikkTorzsBetolt(utvonal) {
+/**
+ * A szerkesztésre megnyitott cikk törzse. A lappal közös letöltőt használjuk,
+ * mert itt a legdrágább a régi másolat: a szerkesztő a betöltött szöveget
+ * küldi vissza, tehát egy elavult példány csendben visszaírná valaki más
+ * időközbeni módosítását.
+ */
+async function cikkTorzsBetolt(cikk) {
   try {
-    const valasz = await fetch(`./${utvonal}`);
-    if (!valasz.ok) return '';
-    const nyers = await valasz.text();
     const { frontmatterBont } = await import('../frontmatter.js');
-    return frontmatterBont(nyers).torzs;
+    return frontmatterBont(await cikkTorzsLetolt(cikk)).torzs;
   } catch {
     return '';
   }
@@ -392,6 +397,12 @@ function kozzetetelKot() {
       naplot(naplo, `${eredmeny.uj ? 'Beküldve' : 'Módosítva'}: ${utvonal}`, 'rendben');
       commitHivatkozas(naplo, eredmeny.commitCim);
       naplot(naplo, 'A lap a közzétételi folyamat lefutása után frissül (néhány perc).', 'info');
+
+      // A fájl tartalma megváltozott, a jegyzékbeli verzió tehát elavult.
+      // Kinullázva a következő megnyitás a kiszolgálótól kéri el a szöveget,
+      // nem a böngésző mostanra régi másolatából.
+      const bejegyzes = mindenCikk.find((cikk) => cikk.slug === piszkozat.slug);
+      if (bejegyzes) bejegyzes.verzio = null;
 
       allapot.mentettTorol();
       allapot.frissit({ eredetiSlug: piszkozat.slug });

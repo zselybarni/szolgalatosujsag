@@ -229,6 +229,30 @@ lefuttatja a teszteket, újraépíti a cikkjegyzéket, és kirakja a lapot a
 GitHub Pages-re. Egyszeri teendő a repó beállításainál: **Settings → Pages →
 Source: GitHub Actions**.
 
+### Frissesség: mikor látja az olvasó az új cikket
+
+Amint a fenti folyamat lefutott — frissítés, `Ctrl+F5`, várakozás nélkül.
+Ez nem magától értetődő: a GitHub Pages `max-age=600`-zal adja ki a `.json`,
+`.md` és `.html` fájlokat (a `.js`, `.css` és a képek négy órát kapnak), és a
+böngésző ezen az ablakon belül meg sem kérdezi a kiszolgálót. A fejléceket
+statikus tárhelyen nem tudjuk átírni, ezért a kliens kér másképp:
+
+- a **cikkjegyzéket** minden betöltésnél újraellenőrizteti (feltételes kérés:
+  változatlan fájlnál `304`, nulla bájt);
+- a **cikkek törzsét** a jegyzékbeli `verzio` ujjlenyomattal kéri le
+  (`…/cikk.md?v=6cde6d25`), így a fájl gyorsítótárazható marad, a módosítása
+  viszont új címet kap.
+
+A részletek és az elvetett megoldások a
+[0008-as ADR](docs/adr/0008-friss-tartalom-a-gyorsitotar-ellenere.md)-ban. Két
+dolgot érdemes fejben tartani:
+
+- **A lap kódja (`.js`, `.css`) négy óráig ragadhat** a visszatérő olvasónál.
+  A cikkek megjelenését ez nem gátolja, de egy felületi változás ennyit
+  késhet.
+- **Képet ne cseréljünk azonos néven.** A cím a kép azonosítója; azonos néven
+  feltöltött új kép négy óráig a régi maradhat. Új képhez új fájlnevet.
+
 ## Felépítés
 
 ```
@@ -240,7 +264,7 @@ assets/js/              kliensoldali modulok (config, útválasztó, nézetek, i
 assets/js/szerkeszto/   a szerkesztő moduljai
 content/cikkek/*.md     a cikkek
 content/rovatok.json    a gondozott rovatlista – ezt kézzel szerkeszd
-content/index.json      a cikkjegyzék – a build állítja elő, kézzel ne szerkeszd
+content/index.json      a cikkjegyzék (verziókkal) – a build állítja elő, kézzel ne szerkeszd
 content/images.json     a képjegyzék a képválasztóhoz – szintén a build írja
 tools/                  jegyzékkészítő, fejlesztői kiszolgáló, tesztek
 vendor/marked.min.js    a bemásolt Markdown-értelmező
