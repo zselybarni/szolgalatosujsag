@@ -17,12 +17,12 @@ Te mire gondolsz ennek a szónak a hallatán?
 Talán a fura telefonra? D55-re? A fura élőszavazásra? Akárhogy is ez
 megváltozik.
 
-Kicserélik a telefont, a mikrofont sőt rövid időre az állomás is bezár, mivel
-felújítják. A telefon hasonló lesz mint a többi helyen a mikrofon pedig olyan
-lesz mint ami Hűvösvölgyben van.
+Kicserélik a telefont, a mikrofont, sőt rövid időre az állomás is bezár, mivel
+felújítják. A telefon hasonló lesz mint a többi helyen, a mikrofon pedig olyan
+lesz mint ami Hűvösvölgyben most van.
 
 > Utáltam azt a telefont!
 
 > Most már sokkal szebb lesz az állomás!
 
-A hogy látható sokan örülnek ennek a hírnek. Na és te örülsz?
+Ahogy látható sokan örülnek ennek a hírnek. Na és te örülsz?
