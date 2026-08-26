@@ -320,6 +320,10 @@ A lap képei a `content/images` mappában laknak. Ajánlott méret: legfeljebb
 1600 képpont széles, 16:9 körüli arány. Formátum: `svg` rajzhoz, `webp` vagy
 `jpg` fényképhez.
 
+> **Cserélni ne azonos néven cserélj.** A kép címe az azonosítója, a böngésző
+> pedig négy óráig a mentett példányt mutatja: az azonos néven feltöltött új
+> kép helyett sokan még a régit látnák. Új kép – új fájlnév.
+
 ### Az útvonalat mihez képest adom meg?
 
 **Mindig a lap gyökeréhez képest** — nem a Markdown fájlhoz. A böngésző az

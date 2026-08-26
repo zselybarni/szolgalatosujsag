@@ -15,6 +15,7 @@
  * beküldeni: a jegyzék magától frissül.
  */
 
+import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile, access, stat } from 'node:fs/promises';
 import { join, dirname, basename, resolve, posix, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,6 +30,8 @@ const KEP_MAPPA = join(GYOKER, 'content', 'images');
 const KIMENET = join(GYOKER, 'content', 'index.json');
 const KEP_KIMENET = join(GYOKER, 'content', 'images.json');
 const SZO_PER_PERC = 200;
+/** Ennyi jelre rövidítjük az ujjlenyomatot: cím végére való, ütközni nem fog. */
+const VERZIO_HOSSZ = 8;
 const KEP_KITERJESZTESEK = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif']);
 
 const hibak = [];
@@ -93,11 +96,13 @@ async function feldolgoz(fajl) {
     ? adat.lead.trim().replace(/\s+/g, ' ')
     : leadSzarmaztat(torzs);
 
+  let vegleges = nyers;
   if (lead) {
     const ujTartalom = leadVisszair(nyers, lead);
     if (ujTartalom) {
       await writeFile(utvonal, ujTartalom, 'utf8');
       atirtFajlok.push(fajl);
+      vegleges = ujTartalom;
     }
   }
 
@@ -114,7 +119,16 @@ async function feldolgoz(fajl) {
     coverAlt: adat.coverAlt ?? null,
     featured: adat.featured === true,
     readingMinutes: Math.max(1, Math.round(szoSzam(torzs) / SZO_PER_PERC)),
+    // A már visszaírt, végleges tartalomból – különben a lead formázása után
+    // egy futással elavulna. A kliens ezzel bővíti a .md címét, hogy a
+    // böngésző gyorsítótárából ne régi szöveg jöjjön: lásd content.js.
+    verzio: ujjlenyomat(vegleges),
   };
+}
+
+/** Rövid tartalmi ujjlenyomat a cikk címének kiegészítéséhez. */
+function ujjlenyomat(tartalom) {
+  return createHash('sha256').update(tartalom).digest('hex').slice(0, VERZIO_HOSSZ);
 }
 
 /**

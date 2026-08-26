@@ -16,10 +16,15 @@ import { cikkNezet } from './article.js';
 import { elem, urit } from './dom.js';
 import { hirfolyamNezet } from './feed.js';
 
+/**
+ * @returns {() => void} a mostani útvonal újrarajzolása – a lap frissítéséhez,
+ *   amikor a félretett laphoz visszatérve új cikk került a jegyzékbe
+ */
 export function utvalasztoInditas(tarolo) {
   const kezel = () => valt(tarolo).catch((hiba) => hibaNezet(tarolo, hiba));
   window.addEventListener('hashchange', kezel);
   kezel();
+  return kezel;
 }
 
 async function valt(tarolo) {

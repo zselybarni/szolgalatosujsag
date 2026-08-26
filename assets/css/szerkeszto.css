@@ -133,6 +133,14 @@
 }
 .szerk-gomb--halk:hover { background: var(--alap-melyebb); color: var(--kek); border-color: var(--kek); }
 
+/* A törlés visszavonhatatlan, ezért kilóg a lap kék-zöld sorából. */
+.szerk-gomb--veszely { --veszely: #c0392b; border-color: var(--veszely); color: var(--veszely); }
+.szerk-gomb--veszely:hover:not(:disabled) { background: var(--veszely); color: var(--felulet); }
+:root[data-theme="dark"] .szerk-gomb--veszely { --veszely: #ff9b93; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .szerk-gomb--veszely { --veszely: #ff9b93; }
+}
+
 .szerk-gombsor { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
 
 /* --- chipek (rovat, címke) ----------------------------------------------- */

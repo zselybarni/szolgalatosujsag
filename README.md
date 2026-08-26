@@ -10,6 +10,8 @@ JavaScripttel fut, és GitHub Pages-ről szolgál ki.
 - **Hírfolyam** — vezető cikk, rovatválasztó és cikkrács.
 - **Időjárás a vonal mentén** — az időjárás-jelzőre kattintva állomásonkénti
   előrejelzés nyílik, Széchenyihegytől Hűvösvölgyig.
+- **Frissítési ajánlat** — a félretett laphoz visszatérve szól, ha közben új
+  cikk jelent meg.
 
 ## Helyi futtatás
 
@@ -61,6 +63,10 @@ Amit tud:
   tényleges szerkesztés, és két hét után a mentés elévül.
 - **Meglévő cikk szerkesztése** — a legördülő listából betölthető bármelyik
   megjelent (és ütemezett) cikk.
+- **Cikk törlése** — a betöltött, már megjelent cikk kivehető a repóból. Tokennel
+  a szerkesztő maga küldi be a törlést (rákérdez), token nélkül a GitHub saját
+  törlőlapját nyitja meg, ahol a commitot te hagyod jóvá. Új, még be nem küldött
+  piszkozatnál a gomb nem él – azt az „Új cikk" dobja el.
 - **Ctrl+Z** — a szerkesztő az eszköztár műveleteit is a böngésző saját
   visszavonási sorába teszi, így a gombokkal beszúrt szöveg is visszavonható.
 
@@ -87,6 +93,10 @@ A „Kimenet" alatt van egy külön felnyitható szakasz, amivel a szerkesztő
 Ezután a **Közzététel** gomb: először feltölti a behúzott képeket, majd a cikket,
 és ad egy hivatkozást a commitra. A lap néhány perccel később frissül, amikor a
 közzétételi folyamat lefutott.
+
+Ugyanez a token viszi a **Cikk törlése** gombot is: a betöltött cikk fájlját
+törli a repóból – rákérdezés után, és csak akkor, ha a fájl közben nem változott
+meg. A törlés eredménye ugyanide, a szakasz naplójába kerül.
 
 A token kezelése szándékosan szűkmarkú:
 
@@ -221,6 +231,38 @@ lefuttatja a teszteket, újraépíti a cikkjegyzéket, és kirakja a lapot a
 GitHub Pages-re. Egyszeri teendő a repó beállításainál: **Settings → Pages →
 Source: GitHub Actions**.
 
+### Frissesség: mikor látja az olvasó az új cikket
+
+Amint a fenti folyamat lefutott — frissítés, `Ctrl+F5`, várakozás nélkül.
+Ez nem magától értetődő: a GitHub Pages `max-age=600`-zal adja ki a `.json`,
+`.md` és `.html` fájlokat (a `.js`, `.css` és a képek négy órát kapnak), és a
+böngésző ezen az ablakon belül meg sem kérdezi a kiszolgálót. A fejléceket
+statikus tárhelyen nem tudjuk átírni, ezért a kliens kér másképp:
+
+- a **cikkjegyzéket** minden betöltésnél újraellenőrizteti (feltételes kérés:
+  változatlan fájlnál `304`, nulla bájt);
+- a **cikkek törzsét** a jegyzékbeli `verzio` ujjlenyomattal kéri le
+  (`…/cikk.md?v=6cde6d25`), így a fájl gyorsítótárazható marad, a módosítása
+  viszont új címet kap.
+
+Egy nyitva felejtett fül ettől még a betöltéskori lapot mutatná – hiába friss
+minden kérés, ha nincs kérés –, ezért a lap a visszatérő olvasónál (fülváltás,
+ablakra kattintás, vissza-gomb) újra megnézi a jegyzéket. Ha közben új cikk
+jelent meg, egy gombbal **szól**, de a hírfolyamot magától nem rendezi át: a
+csere az olvasó kattintására történik. A két kérdezés közti szünet a
+`config.js`-ben állítható (`HIRFOLYAM.frissitesPercek`, alapból 5 perc;
+nullával kikapcsol).
+
+A részletek és az elvetett megoldások a
+[0008-as ADR](docs/adr/0008-friss-tartalom-a-gyorsitotar-ellenere.md)-ban. Két
+dolgot érdemes fejben tartani:
+
+- **A lap kódja (`.js`, `.css`) négy óráig ragadhat** a visszatérő olvasónál.
+  A cikkek megjelenését ez nem gátolja, de egy felületi változás ennyit
+  késhet.
+- **Képet ne cseréljünk azonos néven.** A cím a kép azonosítója; azonos néven
+  feltöltött új kép négy óráig a régi maradhat. Új képhez új fájlnevet.
+
 ## Felépítés
 
 ```
@@ -232,7 +274,7 @@ assets/js/              kliensoldali modulok (config, útválasztó, nézetek, i
 assets/js/szerkeszto/   a szerkesztő moduljai
 content/cikkek/*.md     a cikkek
 content/rovatok.json    a gondozott rovatlista – ezt kézzel szerkeszd
-content/index.json      a cikkjegyzék – a build állítja elő, kézzel ne szerkeszd
+content/index.json      a cikkjegyzék (verziókkal) – a build állítja elő, kézzel ne szerkeszd
 content/images.json     a képjegyzék a képválasztóhoz – szintén a build írja
 tools/                  jegyzékkészítő, fejlesztői kiszolgáló, tesztek
 vendor/marked.min.js    a bemásolt Markdown-értelmező
@@ -266,8 +308,9 @@ JavaScript nélkül se legyen névtelen a lap, de betöltéskor mindig a
 a megjelenítést nem befolyásolja.
 
 Ugyanebben a fájlban állítható a hírsáv szabálya (`HIRSAV`), a kiemelés
-elévülése (`HIRFOLYAM.kiemelesNapok`), a lead hossza és tördelése (`LEAD`),
-valamint a tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
+elévülése (`HIRFOLYAM.kiemelesNapok`), a nyitva hagyott lap frissítési szünete
+(`HIRFOLYAM.frissitesPercek`), a lead hossza és tördelése (`LEAD`), valamint a
+tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
 
 ## Adatforrások
 

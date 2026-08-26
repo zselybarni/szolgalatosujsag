@@ -468,6 +468,40 @@ a { color: inherit; }
 
 .tovabbiak { display: grid; place-items: center; margin-top: 34px; }
 
+/* --- frissítési ajánlat --------------------------------------------------
+   A lap alján lebeg, hogy se a lapfejet, se az olvasott sort ne takarja el,
+   és hogy a felbukkanása ne rendezze át a szöveget az olvasó szeme előtt. */
+
+.frissites {
+  /* A vízszintes középre állítás a két oldalt megfogott sávban `margin`-nal
+     megy, nem `left: 50%`-kal: az a keskeny telefonon a fél képernyőre
+     szorítaná a gombot, és három sorba törné a feliratot. */
+  position: fixed; left: 16px; right: 16px; bottom: 22px;
+  width: fit-content; max-width: 100%;
+  margin-inline: auto;
+  z-index: 45;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 11px 22px;
+  border: 1px solid var(--kek); border-radius: 999px;
+  background: var(--kek); color: var(--felulet);
+  font: inherit; font-weight: 650; font-size: .9rem;
+  box-shadow: var(--arnyek-emelt);
+  cursor: pointer;
+  animation: frissites-be .25s ease-out;
+}
+/* A rejtést a display: inline-flex különben felülírná. */
+.frissites[hidden] { display: none; }
+.frissites:hover { background: var(--kek-melyebb); border-color: var(--kek-melyebb); }
+.frissites__ikon { width: 17px; height: 17px; flex: none; }
+
+@keyframes frissites-be {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .frissites { animation: none; }
+}
+
 .gomb {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 11px 24px;

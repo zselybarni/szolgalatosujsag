@@ -1,0 +1,78 @@
+# A friss tartalom a böngésző gyorsítótára ellenében
+
+A GitHub Pages maga dönti el, meddig „friss” egy fájl, és ezen statikus
+tárhelyen nincs mit állítani – nincs `_headers`, nincs `.htaccess`:
+
+| Fájl | `Cache-Control` |
+| --- | --- |
+| `.html`, `.json`, `.md` | `max-age=600` (10 perc) |
+| `.js`, `.css`, képek | `max-age=14400` (4 óra) |
+
+A `max-age` ablakában a böngésző **meg sem kérdezi** a kiszolgálót, hanem a
+saját másolatát adja. A lap egésze ebből él: a `content/index.json` mondja meg,
+milyen cikkek léteznek — ha az régi, akkor a frissen közzétett cikk az olvasó
+számára nem is létezik. Nem elméleti gond: a közzététel után visszatérő olvasó
+tíz percig a tegnapi lapot látta.
+
+## A döntés
+
+Amit a kiszolgálón nem tudunk állítani, azt a kérés oldalán állítjuk:
+
+- **A jegyzék** (`content/index.json`, és a szerkesztőnek a `images.json`,
+  `rovatok.json`) minden betöltéskor `cache: 'no-cache'` beállítással megy.
+  Ez nem a gyorsítótár kikapcsolása: feltételes kérés, amire a változatlan
+  fájl `304`-gyel felel, nulla bájt letöltéssel. A jegyzéknél nincs más
+  fogódzó — a saját címét nem tudjuk mihez igazítani.
+- **A cikkek törzsét** viszont igen: a jegyzékbe minden cikk mellé bekerül a
+  `verzio`, a fájl végleges tartalmából képzett rövid ujjlenyomat, amit a
+  kliens a `.md` címe után tesz (`…/cikk.md?v=6cde6d25`). Amíg a cikk nem
+  változik, a böngésző nyugodtan a mentett példányt használja; módosítás után
+  más a cím, tehát új a tartalom. A friss jegyzék hordozza a verziót, így a
+  kettő együtt működik.
+
+## A nyitva felejtett lap
+
+A fenti kettő minden *betöltésnél* friss tartalmat ad, csakhogy egy háttérben
+hagyott fül sosem tölt be újra: hiába friss minden kérés, ha nincs kérés. Ezért
+amikor a lap újra láthatóvá válik – fülváltás, ablakra kattintás, vissza-gomb –,
+`assets/js/frissites.js` újraolvassa a jegyzéket, legfeljebb `frissitesPercek`
+gyakorisággal.
+
+Ha változott, **szólunk, nem cserélünk**: a lap alján felbukkan a frissítési
+ajánlat, és a hírfolyamot az olvasó kattintása rajzolja újra. Az automatikus
+csere elvesző görgetési helyet, becsukódó „Továbbiak”-at és a szeme előtt
+elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
+
+## Miért nem másképp
+
+- **Időbélyeg a címben** (`?t=${Date.now()}`) minden betöltésnél új címet ad,
+  tehát minden cikket újra letöltet, és a CDN gyorsítótárát is használhatatlanná
+  teszi. A verzió pont annyit érvénytelenít, amennyi változott.
+- **`cache: 'no-store'`** a jegyzéknél is működne, de lemond a `304`-ről:
+  minden betöltés letöltené a teljes jegyzéket.
+- **Service worker** a fejlécek fölé kerekedne, de egy statikus lapra saját,
+  jóval csúnyább elavulási osztályt hozna: a rosszul frissülő service worker
+  hetekre beragasztja a régi lapot.
+- **Egyedi tartomány, saját CDN-nel** meg tudná adni a fejléceket, de az már
+  nem a „statikus GitHub Pages” kikötés.
+
+## Következmény
+
+- Új és módosított cikk azonnal látszik, amint a közzétételi folyamat lefutott;
+  az olvasónak nem kell frissítenie (`Ctrl+F5`).
+- Betöltésenként egy feltételes kérés a jegyzékre, és legfeljebb
+  `frissitesPercek`-enként egy a visszatérő olvasónál. Ez a 304 miatt bájtban
+  nulla, időben egy kérésnyi.
+- A jegyzék újraolvasásakor a megváltozott cikkek kirajzolt törzsét eldobjuk a
+  memóriából is: a slug ugyanaz maradt, a szöveg viszont nem.
+- A `verzio` a `tools/build-index.mjs` dolga, a `generalva` mezőhöz hasonlóan
+  építési adat, ezért – a [0004](0004-magyar-kod-angol-fejlecmezok.md) szerint –
+  magyar nevű: nem a cikk fejlécéből jön.
+- **A lap saját kódja (`.js`, `.css`) továbbra is négy óráig ragadhat** a
+  visszatérő olvasónál. A cikkek megjelenését ez nem gátolja – azokat a friss
+  jegyzékből szedi a kód –, egy kódváltozás viszont ennyit késhet. Feloldani
+  csak verziózott eszközcímekkel lehetne, ami ES-modulok mellett vagy építési
+  lépést, vagy importtérképet kíván; ezt nem vállaltuk be.
+- **A képek** neve a címük: ha egy meglévő képet más tartalommal, azonos néven
+  töltünk fel, az olvasónál négy óráig a régi maradhat. Csere helyett tehát új
+  fájlnevet adjunk.

@@ -87,6 +87,38 @@ test('meglévő fájlnál a mostani sha-t küldi, hogy ne írjon vakon felül', 
   assert.equal(JSON.parse(hivasok.at(-1).torzs).sha, 'abc123');
 });
 
+test('a törlés DELETE-tel és a mostani sha-val megy', async () => {
+  const cim = `${ALAP}/contents/content/cikkek/van.md`;
+  const { kerdez, hivasok } = hamisKerdez({
+    [`GET ${cim}?ref=main`]: { status: 200, adat: { sha: 'abc123' } },
+    [`DELETE ${cim}`]: { status: 200, adat: { commit: { html_url: 'https://github.com/x/y/commit/f00' } } },
+  });
+
+  const eredmeny = await githubKliens({ token: 't', repo: REPO, kerdez })
+    .fajlTorol({ utvonal: 'content/cikkek/van.md', uzenet: 'Cikk törlése: Van' });
+
+  assert.equal(eredmeny.commitCim, 'https://github.com/x/y/commit/f00');
+  assert.equal(hivasok.at(-1).metodus, 'DELETE');
+  const torzs = JSON.parse(hivasok.at(-1).torzs);
+  assert.equal(torzs.sha, 'abc123');
+  assert.equal(torzs.branch, 'main');
+  assert.equal(torzs.message, 'Cikk törlése: Van');
+});
+
+test('a nem létező fájlt meg sem próbálja törölni', async () => {
+  const cim = `${ALAP}/contents/content/cikkek/nincs.md`;
+  const { kerdez, hivasok } = hamisKerdez({
+    [`GET ${cim}?ref=main`]: { status: 404, adat: { message: 'Not Found' } },
+  });
+
+  await assert.rejects(
+    () => githubKliens({ token: 't', repo: REPO, kerdez })
+      .fajlTorol({ utvonal: 'content/cikkek/nincs.md', uzenet: 'Cikk törlése' }),
+    /már nincs a repóban/,
+  );
+  assert.ok(!hivasok.some((h) => h.metodus === 'DELETE'), 'a hiányzó fájlra is elment a törlés');
+});
+
 test('a hibás tokent érthető mondattal jelzi', async () => {
   const { kerdez } = hamisKerdez({ [`GET ${ALAP}`]: { status: 401, adat: { message: 'Bad credentials' } } });
   await assert.rejects(

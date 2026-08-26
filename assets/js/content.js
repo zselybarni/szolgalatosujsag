@@ -5,6 +5,24 @@
  *
  * A hírfolyam kirajzolásához elég a jegyzék; a Markdown törzs csak akkor
  * töltődik le, amikor az olvasó megnyit egy cikket.
+ *
+ * ## Frissesség a böngésző gyorsítótára ellenében
+ *
+ * A GitHub Pages `Cache-Control: max-age=600`-zal adja ki a .json és .md
+ * fájlokat, tehát a böngésző tíz percig kérdezés nélkül a saját másolatát
+ * mutatja. Így egy frissen közzétett cikk az olvasónak addig nem is létezik –
+ * a fejléceket pedig statikus tárhelyen nem tudjuk átírni. Két eszközünk van,
+ * és mind a kettő a kliensé:
+ *
+ *   – a **jegyzéket** minden betöltéskor újraellenőriztetjük a kiszolgálóval
+ *     (`cache: 'no-cache'` – feltételes kérés, változatlan fájlnál 304-es
+ *     válasz, nulla bájt letöltés), mert erre nincs más fogódzónk: a jegyzék
+ *     címét nem tudjuk mihez igazítani;
+ *   – a **cikkek törzsét** viszont igen: a jegyzékben ott a `verzio`, a fájl
+ *     tartalmából képzett rövid ujjlenyomat, amit a cím után teszünk. Amíg a
+ *     cikk nem változik, a böngésző nyugodtan a mentett példányt használja,
+ *     módosítás után viszont más címet kér le. Ez a friss jegyzékre épül: a
+ *     verzió onnan jön.
  */
 
 import { UTVONALAK } from './config.js';
@@ -14,39 +32,79 @@ import { frontmatterBont } from './frontmatter.js';
 let jegyzekIgeret = null;
 const torzsCache = new Map();
 
+/** Kérésbeállítás: a kiszolgáló mondja meg, változott-e a fájl. */
+const MINDIG_FRISS = { cache: 'no-cache' };
+
 /**
  * Előnézeti mód: `?elonezet=1` a lap címében megmutatja a jövőre datált
  * cikkeket is. Enélkül egy jövőbeli dátum ütemezésként működik – a cikk a
  * saját napján magától megjelenik, újbóli közzététel nélkül.
  */
-const elonezet = new URLSearchParams(window.location.search).has('elonezet');
+// A `globalThis.location` a böngészőben mindig megvan; az elhagyható tagolás
+// azért kell, hogy a modul a lapon kívül – például a tesztekben – is betölthető
+// legyen. Ilyenkor nincs cím, tehát nincs előnézet sem.
+const elonezet = new URLSearchParams(globalThis.location?.search ?? '').has('elonezet');
 
 /** @returns {Promise<{ cikkek: object[] }>} */
 export function jegyzekBetolt() {
   if (!jegyzekIgeret) {
-    jegyzekIgeret = fetch(UTVONALAK.indexJson, { headers: { Accept: 'application/json' } })
-      .then((valasz) => {
-        if (!valasz.ok) throw new Error(`A cikkjegyzék nem tölthető be (${valasz.status}).`);
-        return valasz.json();
-      })
-      .then((adat) => {
-        const rendezett = [...(adat.cikkek ?? [])]
-          .sort((a, b) => datum(b.date) - datum(a.date));
-        return {
-          ...adat,
-          // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
-          // új közzététel: a cikk a saját napján lép be a hírfolyamba.
-          cikkek: rendezett.filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0),
-          /** Szűrés nélkül, az ütemezett cikkekkel együtt – a szerkesztőnek. */
-          mindenCikk: rendezett,
-        };
-      })
+    jegyzekIgeret = jegyzekLetolt()
+      .then(jegyzekRendez)
       .catch((hiba) => {
         jegyzekIgeret = null;
         throw hiba;
       });
   }
   return jegyzekIgeret;
+}
+
+/**
+ * A jegyzék újraolvasása a kiszolgálóról, a memóriában tartott példány helyett.
+ *
+ * Erre a nyitva felejtett lap miatt van szükség: a jegyzéket induláskor egyszer
+ * kérjük le, tehát hiába friss minden kérésünk, ha nincs kérés. A hívó ebből
+ * tudja meg, van-e miről szólni az olvasónak.
+ *
+ * A mostani jegyzéket csak sikeres letöltés után cseréljük: hálózati hiba
+ * esetén maradjon, ami eddig működött.
+ *
+ * @returns {Promise<{ cikkek: object[], ujCikkek: object[], valtozott: boolean }>}
+ */
+export async function jegyzekUjratolt() {
+  const regi = jegyzekIgeret ? await jegyzekIgeret.catch(() => null) : null;
+  const friss = jegyzekRendez(await jegyzekLetolt());
+  jegyzekIgeret = Promise.resolve(friss);
+
+  const regiVerziok = new Map((regi?.cikkek ?? []).map((cikk) => [cikk.slug, cikk.verzio ?? null]));
+
+  // A megváltozott cikkek kirajzolt törzsét eldobjuk: a slug ugyanaz maradt,
+  // a szöveg viszont nem.
+  for (const cikk of friss.cikkek) {
+    if (regiVerziok.has(cikk.slug) && regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null)) {
+      torzsCache.delete(cikk.slug);
+    }
+  }
+
+  const ujCikkek = friss.cikkek.filter((cikk) => !regiVerziok.has(cikk.slug));
+  const valtozott = !regi
+    || friss.cikkek.length !== regi.cikkek.length
+    || friss.cikkek.some((cikk) => regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null));
+
+  return { ...friss, ujCikkek, valtozott };
+}
+
+/** A nyers jegyzékből a lap által használt alak: rendezve és megszűrve. */
+function jegyzekRendez(adat) {
+  const rendezett = [...(adat.cikkek ?? [])]
+    .sort((a, b) => datum(b.date) - datum(a.date));
+  return {
+    ...adat,
+    // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
+    // új közzététel: a cikk a saját napján lép be a hírfolyamba.
+    cikkek: rendezett.filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0),
+    /** Szűrés nélkül, az ütemezett cikkekkel együtt – a szerkesztőnek. */
+    mindenCikk: rendezett,
+  };
 }
 
 /** Egy cikk metaadata a jegyzékből. */
@@ -64,13 +122,55 @@ export async function cikkBetolt(slug) {
   if (!meta) throw new Error(`Nincs ilyen cikk: ${slug}`);
 
   if (!torzsCache.has(slug)) {
-    const valasz = await fetch(meta.path);
-    if (!valasz.ok) throw new Error(`A cikk szövege nem tölthető be (${valasz.status}).`);
-    const { torzs } = frontmatterBont(await valasz.text());
+    const { torzs } = frontmatterBont(await cikkTorzsLetolt(meta));
     torzsCache.set(slug, markdownRenderel(torzs));
   }
 
   return { meta, html: torzsCache.get(slug) };
+}
+
+/**
+ * A jegyzék letöltése: elsőként a kiszolgálótól, ellenőriztetve.
+ *
+ * Ha nincs hálózat, inkább a böngésző mentett – akár nem friss – példánya
+ * jöjjön, mint egy üres lap: ugyanaz az elv, amit az időjárás-jelző követ.
+ * Ez csak a gyorsítótár friss ablakán belül segít, de pont annyit ad vissza,
+ * amennyit a szigorúbb kérés elvett.
+ */
+async function jegyzekLetolt() {
+  const fejlec = { Accept: 'application/json' };
+  let valasz;
+  try {
+    valasz = await fetch(UTVONALAK.indexJson, { headers: fejlec, ...MINDIG_FRISS });
+  } catch {
+    valasz = await fetch(UTVONALAK.indexJson, { headers: fejlec });
+  }
+  if (!valasz.ok) throw new Error(`A cikkjegyzék nem tölthető be (${valasz.status}).`);
+  return valasz.json();
+}
+
+/**
+ * A cikk törzsének címe: a fájl útvonala a jegyzékbeli verzióval.
+ * @param {{ path: string, verzio?: string }} meta a cikk jegyzékbeli sora
+ */
+export function cikkForras(meta) {
+  return meta.verzio ? `${meta.path}?v=${encodeURIComponent(meta.verzio)}` : meta.path;
+}
+
+/**
+ * A cikk nyers Markdown fájlja. Ezen a lap és a szerkesztő is osztozik, hogy
+ * egyikük se dolgozzon a böngésző régi másolatából – a szerkesztőnél ez a
+ * visszaírásnál számít igazán.
+ *
+ * @param {{ path: string, verzio?: string }} meta
+ * @returns {Promise<string>} a fájl teljes tartalma, fejléccel együtt
+ */
+export async function cikkTorzsLetolt(meta) {
+  // Verzió nélküli (régebbi) jegyzéknél nincs mihez igazítani a címet:
+  // ilyenkor a kiszolgálótól kérdezzük meg, változott-e a fájl.
+  const valasz = await fetch(cikkForras(meta), meta.verzio ? {} : MINDIG_FRISS);
+  if (!valasz.ok) throw new Error(`A cikk szövege nem tölthető be (${valasz.status}).`);
+  return valasz.text();
 }
 
 /** A rovatok a cikkek előfordulási gyakorisága szerint, csökkenő sorrendben. */

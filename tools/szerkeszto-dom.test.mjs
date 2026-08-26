@@ -22,6 +22,8 @@ try {
 }
 
 test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { skip: !JSDOM && 'jsdom nincs telepítve' }, async (t) => {
+  /** Minden kérés, amit a szerkesztő indított – a gyorsítótár-szabályokhoz. */
+  const keresek = [];
   const html = await readFile(join(GYOKER, 'szerkeszto.html'), 'utf8');
   const dom = new JSDOM(html, { url: 'http://localhost:4173/szerkeszto.html', pretendToBeVisual: true });
   const { window } = dom;
@@ -42,11 +44,15 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
   globalThis.requestAnimationFrame = (fuggveny) => setTimeout(fuggveny, 0);
   // A lapon is használt, bemásolt marked – így az előnézet valódi HTML-t kap.
   globalThis.marked = await markedBetolt();
-  globalThis.fetch = fajlKiszolgalo;
+  globalThis.fetch = (cim, beallitas) => {
+    keresek.push({ cim: String(cim), beallitas: beallitas ?? {} });
+    return fajlKiszolgalo(cim);
+  };
 
   await import('../assets/js/szerkeszto/main.js');
   await varj();
 
+  const keres = (resz) => keresek.filter((k) => k.cim.includes(resz));
   const $ = (valaszto) => window.document.querySelector(valaszto);
   const $$ = (valaszto) => [...window.document.querySelectorAll(valaszto)];
 
@@ -154,6 +160,39 @@ test('a szerkesztő felépül, és a beírt cím végigfut az előnézeten', { s
     assert.ok(!mentett.includes('github_pat_teszt'), 'a token bekerült a piszkozatba');
   });
 
+  await t.test('a jegyzékek és a megnyitott cikk sosem a böngésző másolatából jönnek', async () => {
+    for (const jegyzek of ['content/index.json', 'content/images.json', 'content/rovatok.json']) {
+      const kerdes = keres(jegyzek).at(0);
+      assert.ok(kerdes, `nem kérte le: ${jegyzek}`);
+      assert.equal(kerdes.beallitas.cache, 'no-cache', `${jegyzek} jöhetne a gyorsítótárból`);
+    }
+  });
+
+  await t.test('a törlés gomb csak a repóban lévő cikknél él', async () => {
+    const torles = $('#torles');
+    assert.ok(torles, 'nincs törlés gomb a kimenetben');
+    assert.ok(torles.disabled, 'a be nem küldött piszkozatnál is aktív a törlés');
+
+    // Meglévő cikk betöltése a legördülő listából.
+    const valaszto = $('#cikk-valaszto');
+    valaszto.value = valaszto.options[1].value;
+    valaszto.dispatchEvent(new window.Event('change', { bubbles: true }));
+    await varj();
+
+    assert.equal($('#fajl-nev').textContent, `content/cikkek/${valaszto.value}.md`);
+    assert.ok(!torles.disabled, 'betöltött cikknél sem lehetett törölni');
+    assert.match(torles.title, /törlése a repóból/);
+
+    // A szerkesztésre megnyitott törzs vagy verziózott címről jön, vagy a
+    // kiszolgálótól – régi másolatból soha, mert azt írnánk vissza a repóba.
+    const torzsKeres = keres(`${valaszto.value}.md`).at(-1);
+    assert.ok(torzsKeres, 'nem kérte le a cikk törzsét');
+    assert.ok(
+      /\?v=/.test(torzsKeres.cim) || torzsKeres.beallitas.cache === 'no-cache',
+      `a cikk törzse a gyorsítótárból is jöhetett: ${torzsKeres.cim}`,
+    );
+  });
+
   dom.window.close();
 });
 
@@ -173,7 +212,8 @@ async function markedBetolt() {
 
 /** A böngésző fetch-e helyett a lemezről olvasunk. */
 async function fajlKiszolgalo(cim) {
-  const utvonal = String(cim).replace(/^\.\//, '').replace(/^https?:\/\/[^/]+\//, '');
+  // A cikkek címe verziót visz (`?v=…`), a lemezen viszont csak a fájl van.
+  const utvonal = String(cim).replace(/\?.*$/, '').replace(/^\.\//, '').replace(/^https?:\/\/[^/]+\//, '');
   try {
     const tartalom = await readFile(join(GYOKER, utvonal), 'utf8');
     return {
