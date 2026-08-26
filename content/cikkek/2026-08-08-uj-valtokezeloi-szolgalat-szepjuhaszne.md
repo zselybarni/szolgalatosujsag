@@ -1,30 +1,28 @@
 ---
-title: "Új váltókezelői szolgálat indul Szépjuhásznén"
-date: 2026-08-08
-section: Szolgálat
-author: Forgalmi rovat
+title: Szépjuhászné állomás megújulása
+date: 2026-08-26
 lead: >
-  A nyári csúcsforgalom miatt Szépjuhászné állomáson önálló
-  váltókezelői szolgálati hely nyílik, egyelőre a hétvégi napokon.
-tags: [szolgálat, Szépjuhászné, forgalom]
+  Tervek
+section: Vasút
+author: Szerkesztőség
+cover: content/images/gozos-szepjuhaszne-1.jpg
+coverAlt: A 490,056 jár be Szépjuhásznén
+tags: [szolgálat, Szépjuhászné, forgalom, nosztalgia, gőzös]
 ---
 
-Szépjuhászné a vonal középső szakaszának legforgalmasabb keresztezőhelye: a
-turistautak találkozásánál sokan szállnak fel és le, a két szerelvény pedig itt
-kerüli ki egymást. A forgalmi szolgálattevő eddig egyedül kezelte a váltókat és
-a jelzőket is.
+Szépjuhászné.
 
-## Mit csinál a váltókezelő?
+Te mire gondolsz ennek a szónak a hallatán?
 
-- A vonat érkezése előtt beállítja és lezárja a menetútba eső váltókat.
-- Ellenőrzi, hogy a szemben érkező szerelvény megállt-e a kijelölt helyen.
-- A forgalmi szolgálattevő utasítására adja meg a továbbhaladás jelzését.
+Talán a fura telefonra? D55-re? A fura élőszavazásra? Akárhogy is ez
+megváltozik.
 
-Az új szolgálati hely négyórás turnusokban működik, így egy nap alatt két
-gyermekvasutas is gyakorolhat rajta.
+Kicserélik a telefont, a mikrofont sőt rövid időre az állomás is bezár, mivel
+felújítják. A telefon hasonló lesz mint a többi helyen a mikrofon pedig olyan
+lesz mint ami Hűvösvölgyben van.
 
-## Jelentkezés
+> Utáltam azt a telefont!
 
-A szolgálatra a tanfolyamot elvégzett, második éves gyermekvasutasok
-jelentkezhetnek. A beosztást a hűvösvölgyi Otthon szolgálatszervezője állítja
-össze, a turnusrend a szolgálati táblán olvasható.
+> Most már sokkal szebb lesz az állomás!
+
+A hogy látható sokan örülnek ennek a hírnek. Na és te örülsz?
