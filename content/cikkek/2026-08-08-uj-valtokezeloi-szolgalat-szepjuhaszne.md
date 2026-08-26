@@ -3,7 +3,7 @@ title: Szépjuhászné állomás megújulása
 date: 2026-08-26
 lead: >
   Tervek
-section: Vasút
+section: gyermekvasút
 author: Szerkesztőség
 cover: content/images/gozos-szepjuhaszne-1.jpg
 coverAlt: A 490,056 jár be Szépjuhásznén
