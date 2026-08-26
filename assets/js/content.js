@@ -49,24 +49,62 @@ const elonezet = new URLSearchParams(globalThis.location?.search ?? '').has('elo
 export function jegyzekBetolt() {
   if (!jegyzekIgeret) {
     jegyzekIgeret = jegyzekLetolt()
-      .then((adat) => {
-        const rendezett = [...(adat.cikkek ?? [])]
-          .sort((a, b) => datum(b.date) - datum(a.date));
-        return {
-          ...adat,
-          // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
-          // új közzététel: a cikk a saját napján lép be a hírfolyamba.
-          cikkek: rendezett.filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0),
-          /** Szűrés nélkül, az ütemezett cikkekkel együtt – a szerkesztőnek. */
-          mindenCikk: rendezett,
-        };
-      })
+      .then(jegyzekRendez)
       .catch((hiba) => {
         jegyzekIgeret = null;
         throw hiba;
       });
   }
   return jegyzekIgeret;
+}
+
+/**
+ * A jegyzék újraolvasása a kiszolgálóról, a memóriában tartott példány helyett.
+ *
+ * Erre a nyitva felejtett lap miatt van szükség: a jegyzéket induláskor egyszer
+ * kérjük le, tehát hiába friss minden kérésünk, ha nincs kérés. A hívó ebből
+ * tudja meg, van-e miről szólni az olvasónak.
+ *
+ * A mostani jegyzéket csak sikeres letöltés után cseréljük: hálózati hiba
+ * esetén maradjon, ami eddig működött.
+ *
+ * @returns {Promise<{ cikkek: object[], ujCikkek: object[], valtozott: boolean }>}
+ */
+export async function jegyzekUjratolt() {
+  const regi = jegyzekIgeret ? await jegyzekIgeret.catch(() => null) : null;
+  const friss = jegyzekRendez(await jegyzekLetolt());
+  jegyzekIgeret = Promise.resolve(friss);
+
+  const regiVerziok = new Map((regi?.cikkek ?? []).map((cikk) => [cikk.slug, cikk.verzio ?? null]));
+
+  // A megváltozott cikkek kirajzolt törzsét eldobjuk: a slug ugyanaz maradt,
+  // a szöveg viszont nem.
+  for (const cikk of friss.cikkek) {
+    if (regiVerziok.has(cikk.slug) && regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null)) {
+      torzsCache.delete(cikk.slug);
+    }
+  }
+
+  const ujCikkek = friss.cikkek.filter((cikk) => !regiVerziok.has(cikk.slug));
+  const valtozott = !regi
+    || friss.cikkek.length !== regi.cikkek.length
+    || friss.cikkek.some((cikk) => regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null));
+
+  return { ...friss, ujCikkek, valtozott };
+}
+
+/** A nyers jegyzékből a lap által használt alak: rendezve és megszűrve. */
+function jegyzekRendez(adat) {
+  const rendezett = [...(adat.cikkek ?? [])]
+    .sort((a, b) => datum(b.date) - datum(a.date));
+  return {
+    ...adat,
+    // A szűrés az olvasó órájához igazodik, ezért a megjelenéshez nem kell
+    // új közzététel: a cikk a saját napján lép be a hírfolyamba.
+    cikkek: rendezett.filter((cikk) => elonezet || napKulonbseg(datum(cikk.date)) >= 0),
+    /** Szűrés nélkül, az ütemezett cikkekkel együtt – a szerkesztőnek. */
+    mindenCikk: rendezett,
+  };
 }
 
 /** Egy cikk metaadata a jegyzékből. */

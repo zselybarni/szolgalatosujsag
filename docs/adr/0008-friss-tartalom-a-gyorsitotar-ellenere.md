@@ -30,6 +30,19 @@ Amit a kiszolgálón nem tudunk állítani, azt a kérés oldalán állítjuk:
   más a cím, tehát új a tartalom. A friss jegyzék hordozza a verziót, így a
   kettő együtt működik.
 
+## A nyitva felejtett lap
+
+A fenti kettő minden *betöltésnél* friss tartalmat ad, csakhogy egy háttérben
+hagyott fül sosem tölt be újra: hiába friss minden kérés, ha nincs kérés. Ezért
+amikor a lap újra láthatóvá válik – fülváltás, ablakra kattintás, vissza-gomb –,
+`assets/js/frissites.js` újraolvassa a jegyzéket, legfeljebb `frissitesPercek`
+gyakorisággal.
+
+Ha változott, **szólunk, nem cserélünk**: a lap alján felbukkan a frissítési
+ajánlat, és a hírfolyamot az olvasó kattintása rajzolja újra. Az automatikus
+csere elvesző görgetési helyet, becsukódó „Továbbiak”-at és a szeme előtt
+elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
+
 ## Miért nem másképp
 
 - **Időbélyeg a címben** (`?t=${Date.now()}`) minden betöltésnél új címet ad,
@@ -47,8 +60,11 @@ Amit a kiszolgálón nem tudunk állítani, azt a kérés oldalán állítjuk:
 
 - Új és módosított cikk azonnal látszik, amint a közzétételi folyamat lefutott;
   az olvasónak nem kell frissítenie (`Ctrl+F5`).
-- Betöltésenként egy feltételes kérés a jegyzékre. Ez a 304 miatt bájtban
+- Betöltésenként egy feltételes kérés a jegyzékre, és legfeljebb
+  `frissitesPercek`-enként egy a visszatérő olvasónál. Ez a 304 miatt bájtban
   nulla, időben egy kérésnyi.
+- A jegyzék újraolvasásakor a megváltozott cikkek kirajzolt törzsét eldobjuk a
+  memóriából is: a slug ugyanaz maradt, a szöveg viszont nem.
 - A `verzio` a `tools/build-index.mjs` dolga, a `generalva` mezőhöz hasonlóan
   építési adat, ezért – a [0004](0004-magyar-kod-angol-fejlecmezok.md) szerint –
   magyar nevű: nem a cikk fejlécéből jön.

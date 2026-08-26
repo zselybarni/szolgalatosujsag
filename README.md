@@ -10,6 +10,8 @@ JavaScripttel fut, és GitHub Pages-ről szolgál ki.
 - **Hírfolyam** — vezető cikk, rovatválasztó és cikkrács.
 - **Időjárás a vonal mentén** — az időjárás-jelzőre kattintva állomásonkénti
   előrejelzés nyílik, Széchenyihegytől Hűvösvölgyig.
+- **Frissítési ajánlat** — a félretett laphoz visszatérve szól, ha közben új
+  cikk jelent meg.
 
 ## Helyi futtatás
 
@@ -243,6 +245,14 @@ statikus tárhelyen nem tudjuk átírni, ezért a kliens kér másképp:
   (`…/cikk.md?v=6cde6d25`), így a fájl gyorsítótárazható marad, a módosítása
   viszont új címet kap.
 
+Egy nyitva felejtett fül ettől még a betöltéskori lapot mutatná – hiába friss
+minden kérés, ha nincs kérés –, ezért a lap a visszatérő olvasónál (fülváltás,
+ablakra kattintás, vissza-gomb) újra megnézi a jegyzéket. Ha közben új cikk
+jelent meg, egy gombbal **szól**, de a hírfolyamot magától nem rendezi át: a
+csere az olvasó kattintására történik. A két kérdezés közti szünet a
+`config.js`-ben állítható (`HIRFOLYAM.frissitesPercek`, alapból 5 perc;
+nullával kikapcsol).
+
 A részletek és az elvetett megoldások a
 [0008-as ADR](docs/adr/0008-friss-tartalom-a-gyorsitotar-ellenere.md)-ban. Két
 dolgot érdemes fejben tartani:
@@ -298,8 +308,9 @@ JavaScript nélkül se legyen névtelen a lap, de betöltéskor mindig a
 a megjelenítést nem befolyásolja.
 
 Ugyanebben a fájlban állítható a hírsáv szabálya (`HIRSAV`), a kiemelés
-elévülése (`HIRFOLYAM.kiemelesNapok`), a lead hossza és tördelése (`LEAD`),
-valamint a tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
+elévülése (`HIRFOLYAM.kiemelesNapok`), a nyitva hagyott lap frissítési szünete
+(`HIRFOLYAM.frissitesPercek`), a lead hossza és tördelése (`LEAD`), valamint a
+tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
 
 ## Adatforrások
 

@@ -40,6 +40,12 @@ export const HIRFOLYAM = {
    * Utána a jelölés magától elévül, és újra a legfrissebb cikk vezet.
    */
   kiemelesNapok: 14,
+  /**
+   * A félretett laphoz visszatérve ennyi idő után nézzük meg újra a
+   * cikkjegyzéket, és szólunk, ha közben új cikk jelent meg. Nullára állítva
+   * a lap sosem frissül magától.
+   */
+  frissitesPercek: 5,
 };
 
 export const LEAD = {

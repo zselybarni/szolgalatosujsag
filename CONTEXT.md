@@ -22,6 +22,12 @@ A cikkek fordított időrendű listája a lapfej alatt: egy vezető cikk és az
 alatta lévő cikkrács. A lap neve ettől független, azt a `LAP.nev` adja.
 _Kerülendő_: feed, hírlista, főoldal.
 
+**Frissítési ajánlat**:
+A lap alján felbukkanó gomb, amely a félretett laphoz visszatérő olvasónak
+szól, ha időközben új cikk jelent meg. Csak ajánl: a hírfolyamot a kattintás
+rajzolja újra.
+_Kerülendő_: értesítés, felugró, toast, banner.
+
 **Vezető cikk**:
 A hírfolyam tetején nagy méretben megjelenő cikk. A `featured` fejlécmezővel
 jelölt cikk, ilyen hiányában a legfrissebb.

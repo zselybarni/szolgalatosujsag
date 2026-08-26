@@ -77,6 +77,69 @@ test('a cikkforrás címe a verzióval bővül, anélkül pedig érintetlen mara
   assert.equal(cikkForras({ path: 'content/cikkek/a.md', verzio: null }), 'content/cikkek/a.md');
 });
 
+/* --- visszatérés a félretett laphoz -------------------------------------- */
+
+/** Friss modulpéldány: a jegyzék memoizálva van, tesztenként újat kérünk. */
+async function frissModul() {
+  return import(`../assets/js/content.js?proba=${Math.random()}`);
+}
+
+/** A megadott jegyzékeket adja sorban; `null` helyett hálózati hibát dob. */
+function jegyzekekSorban(...jegyzekek) {
+  const sor = [...jegyzekek];
+  globalThis.fetch = async () => {
+    const kovetkezo = sor.length > 1 ? sor.shift() : sor[0];
+    if (kovetkezo === null) throw new TypeError('Failed to fetch');
+    return { ok: true, status: 200, json: async () => kovetkezo };
+  };
+}
+
+const cikk = (slug, verzio) => ({ slug, path: `content/cikkek/${slug}.md`, title: slug, date: '2020-01-01', verzio });
+
+test('a visszatérő olvasónál észreveszi az új cikket', async () => {
+  jegyzekekSorban({ cikkek: [cikk('regi', 'a1')] }, { cikkek: [cikk('regi', 'a1'), cikk('uj', 'b2')] });
+  const { jegyzekBetolt: betolt, jegyzekUjratolt: ujratolt } = await frissModul();
+
+  assert.equal((await betolt()).cikkek.length, 1);
+  const eredmeny = await ujratolt();
+
+  assert.equal(eredmeny.valtozott, true);
+  assert.deepEqual(eredmeny.ujCikkek.map((c) => c.slug), ['uj']);
+  assert.equal(eredmeny.cikkek.length, 2);
+  // A friss jegyzék lép a memóriában tartott helyébe.
+  assert.equal((await betolt()).cikkek.length, 2);
+});
+
+test('változatlan jegyzéknél nincs mit jelenteni', async () => {
+  jegyzekekSorban({ cikkek: [cikk('regi', 'a1')] });
+  const { jegyzekBetolt: betolt, jegyzekUjratolt: ujratolt } = await frissModul();
+
+  await betolt();
+  const eredmeny = await ujratolt();
+  assert.equal(eredmeny.valtozott, false);
+  assert.deepEqual(eredmeny.ujCikkek, []);
+});
+
+test('a módosított cikket a verzió árulja el', async () => {
+  jegyzekekSorban({ cikkek: [cikk('regi', 'a1')] }, { cikkek: [cikk('regi', 'c3')] });
+  const { jegyzekBetolt: betolt, jegyzekUjratolt: ujratolt } = await frissModul();
+
+  await betolt();
+  const eredmeny = await ujratolt();
+  assert.equal(eredmeny.valtozott, true, 'a megváltozott törzs nem tűnt fel');
+  assert.deepEqual(eredmeny.ujCikkek, [], 'a módosítás nem új cikk');
+});
+
+test('hálózati hiba esetén megmarad a mostani jegyzék', async () => {
+  jegyzekekSorban({ cikkek: [cikk('regi', 'a1')] }, null);
+  const { jegyzekBetolt: betolt, jegyzekUjratolt: ujratolt } = await frissModul();
+
+  await betolt();
+  await assert.rejects(() => ujratolt());
+  // A lap nem maradhat jegyzék nélkül attól, hogy egy ellenőrzés elszállt.
+  assert.equal((await betolt()).cikkek.length, 1);
+});
+
 test('a hibás választ érthető üzenettel jelzi', async () => {
   globalThis.fetch = async () => ({ ok: false, status: 404 });
   await assert.rejects(() => cikkTorzsLetolt({ path: 'nincs.md' }), /nem tölthető be \(404\)/);
