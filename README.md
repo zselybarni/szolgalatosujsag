@@ -257,9 +257,12 @@ A részletek és az elvetett megoldások a
 [0008-as ADR](docs/adr/0008-friss-tartalom-a-gyorsitotar-ellenere.md)-ban. Két
 dolgot érdemes fejben tartani:
 
-- **A lap kódja (`.js`, `.css`) négy óráig ragadhat** a visszatérő olvasónál.
-  A cikkek megjelenését ez nem gátolja, de egy felületi változás ennyit
-  késhet.
+- **A lap kódja (`.js`, `.css`)** a Pages fejléce szerint négy óráig ragadna a
+  visszatérő olvasónál. Ezt a lap előtt álló Cloudflare oldja meg: egy
+  gyorsítótár-szabály az `/assets/` és `/vendor/` alatt 300 másodperces
+  böngésző-TTL-t ír elő. Ha a szabály eltűnik, egy kódváltozás akár négy órát
+  is késhet a visszatérő olvasónál – a cikkek megjelenését viszont ez sem
+  gátolja.
 - **Képet ne cseréljünk azonos néven.** A cím a kép azonosítója; azonos néven
   feltöltött új kép négy óráig a régi maradhat. Új képhez új fájlnevet.
 

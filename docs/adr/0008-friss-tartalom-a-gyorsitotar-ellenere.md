@@ -68,11 +68,27 @@ elmozduló szöveget jelentene – rosszabbat annál, mint amit megold.
 - A `verzio` a `tools/build-index.mjs` dolga, a `generalva` mezőhöz hasonlóan
   építési adat, ezért – a [0004](0004-magyar-kod-angol-fejlecmezok.md) szerint –
   magyar nevű: nem a cikk fejlécéből jön.
-- **A lap saját kódja (`.js`, `.css`) továbbra is négy óráig ragadhat** a
-  visszatérő olvasónál. A cikkek megjelenését ez nem gátolja – azokat a friss
-  jegyzékből szedi a kód –, egy kódváltozás viszont ennyit késhet. Feloldani
-  csak verziózott eszközcímekkel lehetne, ami ES-modulok mellett vagy építési
-  lépést, vagy importtérképet kíván; ezt nem vállaltuk be.
+- **A lap saját kódja (`.js`, `.css`) a Pages fejléce szerint négy óráig
+  ragadna** a visszatérő olvasónál. A cikkek megjelenését ez nem gátolja –
+  azokat a friss jegyzékből szedi a kód –, egy kódváltozás viszont ennyit
+  késne. Nem elméleti kellemetlenség: éppen ez keltette azt a látszatot, hogy
+  a fenti javítás közzététel után sem működik (a böngésző a régi `content.js`-t
+  futtatta tovább).
+
+  A lap Cloudflare mögül szolgál ki, ezért ezt ott oldottuk meg, kód nélkül:
+  egy gyorsítótár-szabály (Caching → Cache Rules) az `/assets/` és `/vendor/`
+  alatt a **böngésző-TTL-t 300 másodpercre** írja felül, az él gyorsítótárát
+  érintetlenül hagyva. Ellenőrizni így lehet:
+
+  ```bash
+  curl -sI https://szolgalatosujsag.hu/assets/js/content.js | grep -i cache-control
+  # cache-control: max-age=300     – nem 14400
+  ```
+
+  Ha a lap egyszer Cloudflare nélkül szolgálna ki, ez a szabály elveszik, és
+  visszatér a négy óra. Kódból csak verziózott eszközcímek oldanák meg, ami
+  ES-modulok mellett a jegyzéképítő által írt importtérképet kívánna – ezt
+  addig nem vállaltuk be, amíg egyetlen kattintásnyi beállítás megteszi.
 - **A képek** neve a címük: ha egy meglévő képet más tartalommal, azonos néven
   töltünk fel, az olvasónál négy óráig a régi maradhat. Csere helyett tehát új
   fájlnevet adjunk.
