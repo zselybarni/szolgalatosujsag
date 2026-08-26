@@ -4,6 +4,7 @@ date: 2026-08-24
 lead: >
   A ballagók búcsúztatója
 section: ballagás
+cover: content/images/download.webp
 tags: [nosztalgia, tábor]
 ---
 
