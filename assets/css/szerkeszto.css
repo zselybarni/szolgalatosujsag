@@ -21,10 +21,19 @@
 }
 .szerk-fej__bal { display: flex; align-items: center; gap: 18px; }
 .szerk-fej__jobb { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+/* A két gomb egy csoport: így egymáshoz képest középen állnak (nem a magasabb
+   témaváltó aljához igazítva), a csoport egésze pedig a cikkválasztó aljához.
+   Tördeléskor is együtt maradnak. */
+.szerk-fej__gombok { display: flex; align-items: center; gap: 12px; }
 .szerk-fej__cim { font-size: 1.15rem; }
 .szerk-fej__alcim {
   font-size: .7rem; text-transform: uppercase; letter-spacing: .14em;
   color: var(--tinta-nagyon-halvany); font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  /* Telefonon az „Új cikk” is rendes ujjnyomnyi legyen, a témaváltó mellett. */
+  .szerk-fej__gombok .szerk-gomb--halk { padding: 9px 16px; font-size: .82rem; }
 }
 
 .szerk-vissza {
@@ -89,7 +98,21 @@
   display: flex; align-items: center; gap: 10px;
   font-size: .8rem; font-weight: 650;
 }
-.szerk-parban { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* Az `align-items: start` nélkül a két mező egyforma magasra nyúlna, és a
+   rövidebbik (a súgó nélküli „Szerző”) sorai szétnyílnának: a beviteli doboza
+   így a dátumé alá csúszna. */
+.szerk-parban { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 14px; }
+/* A rácselem alapból a saját legkisebb tartalmi szélességére feszíti az
+   oszlopát. A natív dátumválasztó ettől kilóg a sávjából – telefonon egyenesen
+   a szomszéd mezőre csúszik –, ezért engedjük zsugorodni. */
+.szerk-parban > * { min-width: 0; }
+
+@media (max-width: 720px) {
+  /* Telefonon a dátum és a szerző egymás alá kerül: a dátumválasztó natív
+     szövege („2026. Aug 25.”) a fél sávnál szélesebb. A térközt a mezők saját
+     alsó margója adja, ezért itt nincs rés. */
+  .szerk-parban { grid-template-columns: 1fr; gap: 0; }
+}
 
 .szerk-sugo { font-size: .74rem; color: var(--tinta-nagyon-halvany); font-weight: 400; }
 .szerk-sugo--uj { margin-top: -6px; margin-bottom: 12px; color: var(--zold); font-weight: 600; }
