@@ -128,6 +128,18 @@ test('a módosított cikket a verzió árulja el', async () => {
   const eredmeny = await ujratolt();
   assert.equal(eredmeny.valtozott, true, 'a megváltozott törzs nem tűnt fel');
   assert.deepEqual(eredmeny.ujCikkek, [], 'a módosítás nem új cikk');
+  assert.deepEqual(eredmeny.valtozottCikkek.map((c) => c.slug), ['regi']);
+});
+
+test('törölt cikknél is szól, pedig nincs se új, se módosult', async () => {
+  jegyzekekSorban({ cikkek: [cikk('a', 'a1'), cikk('b', 'b1')] }, { cikkek: [cikk('a', 'a1')] });
+  const { jegyzekBetolt: betolt, jegyzekUjratolt: ujratolt } = await frissModul();
+
+  await betolt();
+  const eredmeny = await ujratolt();
+  assert.equal(eredmeny.valtozott, true);
+  assert.deepEqual(eredmeny.ujCikkek, []);
+  assert.deepEqual(eredmeny.valtozottCikkek, []);
 });
 
 test('hálózati hiba esetén megmarad a mostani jegyzék', async () => {

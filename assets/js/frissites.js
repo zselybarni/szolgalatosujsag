@@ -2,9 +2,12 @@
  * A félretett laphoz visszatérő olvasó.
  *
  * A cikkjegyzéket induláskor egyszer olvassuk be, tehát hiába kérünk mindent
- * ellenőriztetve (lásd `content.js`), ha nincs kérés: egy háttérben hagyott
- * fül magától sosem tudna meg új cikkről. Ezért amikor a lap újra láthatóvá
- * válik – fülváltás, ablakra kattintás, vissza-gomb –, megnézzük a jegyzéket.
+ * ellenőriztetve (lásd `content.js`), ha nincs kérés: a nyitva hagyott lap
+ * magától sosem tudna meg új cikkről. Ezért `HIRFOLYAM.frissitesPercek`
+ * sűrűséggel megnézzük a jegyzéket, amíg a lap látszik – és akkor is, amikor
+ * újra láthatóvá válik: fülváltás, ablakra kattintás, vissza-gomb. (Csak a
+ * visszatérésre figyelni kevés volt: aki a lapon ülve várja a saját frissen
+ * közzétett cikkét, sosem váltana fület.)
  *
  * Ha változott, **szólunk, nem cserélünk**: az olvasó szeme előtt átrendeződő
  * hírfolyam – elvesző görgetési hely, becsukódó „Továbbiak” – rosszabb lenne
@@ -34,6 +37,9 @@ export function frissitesInditas({ ujraRajzol }) {
     const cikkek = frissCikkek;
     elrejt();
     ujraRajzol(cikkek);
+    // A változás a hírfolyam tetején van, az olvasó viszont bárhol tarthat.
+    // „Megnézem” után lássa is, amit kért. (Az útválasztó ugyanígy ugrik.)
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
   });
 
   // Új nézetre lépve úgyis a friss jegyzékből rajzolunk: nincs mit ajánlani.
@@ -45,20 +51,28 @@ export function frissitesInditas({ ujraRajzol }) {
   window.addEventListener('focus', nezes);
   window.addEventListener('pageshow', nezes);
 
+  // A nyitott lap magától is körülnéz. Az időzítő nem a szünetet méri – azt a
+  // `nezes` teszi a visszatérésekre –, hanem maga adja a ritmust.
+  setInterval(() => { if (lathato() && !fut) megnez(); }, SZUNET);
+
   function nezes() {
-    if (document.visibilityState !== 'visible') return;
-    if (fut || Date.now() - utolsoNezes < SZUNET) return;
+    if (!lathato() || fut) return;
+    if (Date.now() - utolsoNezes < SZUNET) return;
     megnez();
+  }
+
+  function lathato() {
+    return document.visibilityState === 'visible';
   }
 
   async function megnez() {
     fut = true;
     try {
-      const { valtozott, ujCikkek, cikkek } = await jegyzekUjratolt();
+      const { valtozott, ujCikkek, valtozottCikkek, cikkek } = await jegyzekUjratolt();
       utolsoNezes = Date.now();
       if (!valtozott) return;
       frissCikkek = cikkek;
-      mutat(ujCikkek);
+      mutat(ujCikkek, valtozottCikkek);
     } catch {
       // Elérhetetlen kiszolgáló: maradjon a lap, ami volt. Majd legközelebb.
     } finally {
@@ -66,13 +80,13 @@ export function frissitesInditas({ ujraRajzol }) {
     }
   }
 
-  function mutat(ujCikkek) {
+  function mutat(ujCikkek, valtozottCikkek) {
     // Előbb látszik, utána kap szöveget: a rejtett elem változását a
     // képernyőolvasó nem mondaná be.
     ajanlat.hidden = false;
     urit(ajanlat).append(
       ikon('ikon-frissites', 'frissites__ikon'),
-      elem('span', { szoveg: frissitesSzoveg(ujCikkek) }),
+      elem('span', { szoveg: frissitesSzoveg(ujCikkek, valtozottCikkek) }),
     );
   }
 
@@ -82,11 +96,23 @@ export function frissitesInditas({ ujraRajzol }) {
 }
 
 /**
- * Az ajánlat felirata. Az új cikkeket megszámoljuk, mert az olvasónak az mond
- * valamit; ha csak egy meglévő cikk változott, arról általánosan szólunk.
+ * Az ajánlat felirata.
+ *
+ * Az új cikket megszámoljuk, a módosultat viszont megnevezzük: egy átírt
+ * törzstől a kártyák mit sem változnak, tehát a puszta „Frissült a lap” után
+ * az olvasó joggal hinné, hogy a gomb nem csinált semmit.
  */
-export function frissitesSzoveg(ujCikkek = []) {
-  if (!ujCikkek.length) return 'Frissült a lap – megnézem';
+export function frissitesSzoveg(ujCikkek = [], valtozottCikkek = []) {
   if (ujCikkek.length === 1) return 'Új cikk érkezett – megnézem';
-  return `${ujCikkek.length} új cikk érkezett – megnézem`;
+  if (ujCikkek.length > 1) return `${ujCikkek.length} új cikk érkezett – megnézem`;
+  if (valtozottCikkek.length === 1) return `Frissült: ${rovidCim(valtozottCikkek[0].title)} – megnézem`;
+  if (valtozottCikkek.length > 1) return `${valtozottCikkek.length} cikk frissült – megnézem`;
+  return 'Frissült a lap – megnézem';
+}
+
+/** Hosszú cím a gombon: maradjon meg egy-két sornak telefonon is. */
+function rovidCim(cim, max = 32) {
+  const szoveg = String(cim ?? '').trim();
+  if (!szoveg) return 'egy cikk';
+  return szoveg.length > max ? `${szoveg.slice(0, max - 1).trimEnd()}…` : szoveg;
 }

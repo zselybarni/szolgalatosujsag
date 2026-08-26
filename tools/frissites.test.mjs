@@ -18,7 +18,26 @@ test('több új cikket megszámol', () => {
   assert.equal(frissitesSzoveg([{ slug: 'a' }, { slug: 'b' }, { slug: 'c' }]), '3 új cikk érkezett – megnézem');
 });
 
-test('új cikk nélküli változásról általánosan szól', () => {
-  assert.equal(frissitesSzoveg([]), 'Frissült a lap – megnézem');
+test('a módosult cikket megnevezi, mert a kártyáján semmi sem látszana belőle', () => {
+  assert.equal(frissitesSzoveg([], [{ title: 'A C50-eseink' }]), 'Frissült: A C50-eseink – megnézem');
+});
+
+test('a hosszú címet megrövidíti, hogy elférjen a gombon', () => {
+  const szoveg = frissitesSzoveg([], [{ title: 'Nosztalgiavonat gőzössel a Hárs-hegyi alagúton át' }]);
+  assert.ok(szoveg.startsWith('Frissült: Nosztalgiavonat gőzössel a'), szoveg);
+  assert.ok(szoveg.endsWith('… – megnézem'), `nem jelzi a rövidítést: ${szoveg}`);
+  assert.ok(szoveg.length < 55, `túl hosszú felirat (${szoveg.length}): ${szoveg}`);
+});
+
+test('több módosult cikket megszámol', () => {
+  assert.equal(frissitesSzoveg([], [{ title: 'a' }, { title: 'b' }]), '2 cikk frissült – megnézem');
+});
+
+test('az új cikk erősebb hír a módosultnál', () => {
+  assert.equal(frissitesSzoveg([{ slug: 'uj' }], [{ title: 'régi' }]), 'Új cikk érkezett – megnézem');
+});
+
+test('máskülönben – például törlésnél – általánosan szól', () => {
+  assert.equal(frissitesSzoveg([], []), 'Frissült a lap – megnézem');
   assert.equal(frissitesSzoveg(), 'Frissült a lap – megnézem');
 });

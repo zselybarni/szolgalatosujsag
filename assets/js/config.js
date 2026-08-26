@@ -41,11 +41,12 @@ export const HIRFOLYAM = {
    */
   kiemelesNapok: 14,
   /**
-   * A félretett laphoz visszatérve ennyi idő után nézzük meg újra a
-   * cikkjegyzéket, és szólunk, ha közben új cikk jelent meg. Nullára állítva
-   * a lap sosem frissül magától.
+   * Ilyen sűrűn nézzük meg újra a cikkjegyzéket a nyitva hagyott lapon – és
+   * ennyi idő után akkor is, ha az olvasó visszatér egy félretett fülhöz.
+   * Egy ellenőrzés a 304-es válasz miatt bájtban nulla, ezért lehet sűrű.
+   * Nullára állítva a lap sosem frissül magától.
    */
-  frissitesPercek: 5,
+  frissitesPercek: 2,
 };
 
 export const LEAD = {

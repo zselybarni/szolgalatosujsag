@@ -68,7 +68,8 @@ export function jegyzekBetolt() {
  * A mostani jegyzéket csak sikeres letöltés után cseréljük: hálózati hiba
  * esetén maradjon, ami eddig működött.
  *
- * @returns {Promise<{ cikkek: object[], ujCikkek: object[], valtozott: boolean }>}
+ * @returns {Promise<{ cikkek: object[], ujCikkek: object[],
+ *   valtozottCikkek: object[], valtozott: boolean }>}
  */
 export async function jegyzekUjratolt() {
   const regi = jegyzekIgeret ? await jegyzekIgeret.catch(() => null) : null;
@@ -76,21 +77,26 @@ export async function jegyzekUjratolt() {
   jegyzekIgeret = Promise.resolve(friss);
 
   const regiVerziok = new Map((regi?.cikkek ?? []).map((cikk) => [cikk.slug, cikk.verzio ?? null]));
+  const ujCikkek = [];
+  const valtozottCikkek = [];
 
-  // A megváltozott cikkek kirajzolt törzsét eldobjuk: a slug ugyanaz maradt,
-  // a szöveg viszont nem.
   for (const cikk of friss.cikkek) {
-    if (regiVerziok.has(cikk.slug) && regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null)) {
-      torzsCache.delete(cikk.slug);
-    }
+    if (!regiVerziok.has(cikk.slug)) { ujCikkek.push(cikk); continue; }
+    if (regiVerziok.get(cikk.slug) === (cikk.verzio ?? null)) continue;
+
+    valtozottCikkek.push(cikk);
+    // A megváltozott cikk kirajzolt törzsét eldobjuk: a slug ugyanaz maradt,
+    // a szöveg viszont nem.
+    torzsCache.delete(cikk.slug);
   }
 
-  const ujCikkek = friss.cikkek.filter((cikk) => !regiVerziok.has(cikk.slug));
   const valtozott = !regi
-    || friss.cikkek.length !== regi.cikkek.length
-    || friss.cikkek.some((cikk) => regiVerziok.get(cikk.slug) !== (cikk.verzio ?? null));
+    || ujCikkek.length > 0
+    || valtozottCikkek.length > 0
+    // Törölt cikk: a maradék mind ismerős, csak kevesebben vannak.
+    || friss.cikkek.length !== regi.cikkek.length;
 
-  return { ...friss, ujCikkek, valtozott };
+  return { ...friss, ujCikkek, valtozottCikkek, valtozott };
 }
 
 /** A nyers jegyzékből a lap által használt alak: rendezve és megszűrve. */
