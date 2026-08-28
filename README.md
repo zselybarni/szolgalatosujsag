@@ -324,6 +324,10 @@ tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
   15 percig a `localStorage`-ban marad; hálózati hiba esetén a lap a mentett
   adatot mutatja, jelezve, hogy nem friss.
 - Állomáskoordináták: [OpenStreetMap](https://www.openstreetmap.org/copyright).
+- Látogatottság: Google Analytics 4 (`gtag.js`) – csak az olvasói lapon, a
+  szerkesztőn nem. A mérőkód `async`, tehát ha nem tölt be, a lap ugyanúgy
+  működik; a sütikről és a hozzájárulásról lásd a
+  [0009-es ADR](docs/adr/0009-latogatottsagmeres-google-analytics.md)-t.
 
 > A repóban lévő cikkek és a hozzájuk tartozó képek minta gyanánt készültek: a
 > lap működését mutatják be, nem a Gyermekvasút hivatalos közleményei.

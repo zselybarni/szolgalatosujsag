@@ -8,6 +8,19 @@
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="./assets/css/style.css">
+
+<!-- Google tag (gtag.js) – a lap látogatottságának mérése. Az egyetlen külső
+     kérés a lapon az időjáráson kívül; `async`, tehát ha nem tölt be (blokkoló,
+     hálózati hiba), a lap ugyanúgy működik. Lásd a 0009-es ADR-t. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2MTL4N72TR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-2MTL4N72TR');
+</script>
+
 <script>
   /* A témát a stíluslap előtt állítjuk be, hogy ne villanjon fel a rossz háttér. */
   (function () {
