@@ -37,37 +37,51 @@ A `honnan` értékei: `vezeto` (a vezető cikk), `kartya` (a cikkrács),
 
 ## Egyszeri teendő a GA4-ben
 
-Az események maguktól megjelennek (Reports → Engagement → Events, illetve
-azonnal a Realtime nézetben), a **paramétereik viszont csak akkor**, ha
-felvesszük őket egyedi meghatározásként. Admin → Data display → Custom
-definitions:
+> A menüpontok a magyar felület nevén szerepelnek, zárójelben az angol
+> megfelelővel – a Google időnként átnevezi őket.
 
-**Custom dimensions** (Scope: *Event*, az „Event parameter” mezőbe pontosan ezt
-a nevet írd):
+Az események maguktól megjelennek (**Jelentések → Elköteleződés → Események**,
+Reports → Engagement → Events; a **Valós idejű** nézetben azonnal), a
+**paramétereik viszont csak akkor**, ha felvesszük őket egyedi
+meghatározásként. Ez az egyszeri teendő:
 
-| Dimension name | Event parameter |
-| --- | --- |
-| Cikk címe | `cikk_cim` |
-| Cikk azonosítója | `cikk_slug` |
-| Rovat | `rovat` |
-| Honnan érkezett | `honnan` |
-| Téma | `tema` |
+1. Bal alul **Adminisztrátor** (Admin).
+2. **Adatmegjelenítés** (Data display) → **Egyéni meghatározások**
+   (Custom definitions).
+3. **Egyéni dimenziók** (Custom dimensions) fül → **Egyéni dimenzió
+   létrehozása** gomb. Öt dimenzió kell, mindegyiknél a **Hatókör** (Scope)
+   maradjon **Esemény** (Event), az **Eseményparaméter** (Event parameter)
+   mezőbe pedig pontosan a lenti nevet írd – kisbetűvel, ékezet nélkül:
 
-**Custom metrics** (Scope: *Event*):
+   | Dimenzió neve (szabadon választható) | Eseményparaméter |
+   | --- | --- |
+   | Cikk címe | `cikk_cim` |
+   | Cikk azonosítója | `cikk_slug` |
+   | Rovat | `rovat` |
+   | Honnan érkezett | `honnan` |
+   | Téma | `tema` |
 
-| Metric name | Event parameter | Unit |
-| --- | --- | --- |
-| Olvasás ideje | `masodperc` | Seconds |
-| Látszó cikkek | `latszik` | Standard |
-| Új cikkek száma | `uj_cikk` | Standard |
-| Módosult cikkek száma | `valtozott` | Standard |
+4. **Egyéni mutatók** (Custom metrics) fül → **Egyéni mutató létrehozása**.
+   Négy mutató, szintén **Esemény** hatókörrel; a **Mértékegység**
+   (Unit of measurement) a másodperceknél `Másodperc` (Seconds), a többinél
+   `Szabvány` (Standard):
 
-A felvétel után a **jelentésekben csak az azutáni adat** jelenik meg (a
-Realtime és a DebugView azonnal mutatja), és a szokásos GA4-késés miatt a
-napi jelentésekben ~24 óra múlva látszik minden.
+   | Mutató neve | Eseményparaméter | Mértékegység |
+   | --- | --- | --- |
+   | Olvasás ideje | `masodperc` | Másodperc |
+   | Látszó cikkek | `latszik` | Szabvány |
+   | Új cikkek száma | `uj_cikk` | Szabvány |
+   | Módosult cikkek száma | `valtozott` | Szabvány |
+
+A felvétel után a **jelentésekben csak az azutáni adat** jelenik meg (a valós
+idejű nézet és a **Hibakeresési nézet** / DebugView azonnal mutatja), és a
+szokásos GA4-késés miatt a napi jelentésekben ~24 óra múlva látszik minden.
+Az ingyenes GA4-ben 50 egyéni dimenzió és 50 mutató fér el; ebből ez a lap
+ötöt és négyet használ.
 
 Ha valamelyik esemény fontos célnak számít – például a `cikk_vegigolvasva` –,
-az Admin → Events alatt megjelölhető **key eventként**.
+az **Adminisztrátor → Események** alatt megjelölhető **kulcseseményként**
+(key event).
 
 ## Amit érdemes tudni a számokról
 
