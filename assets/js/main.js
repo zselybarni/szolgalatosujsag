@@ -3,6 +3,7 @@
 import { arculatAlkalmaz } from './arculat.js';
 import { jegyzekBetolt } from './content.js';
 import { frissitesInditas } from './frissites.js';
+import { meresInditas } from './meres.js';
 import { utvalasztoInditas } from './router.js';
 import { temaInditas } from './theme.js';
 import { hirsavKirajzol } from './ticker.js';
@@ -11,6 +12,7 @@ import { idojarasInditas } from './weather-widget.js';
 arculatAlkalmaz();
 temaInditas();
 idojarasInditas();
+meresInditas();
 
 const tarolo = document.getElementById('tartalom');
 const ujraRajzol = utvalasztoInditas(tarolo);

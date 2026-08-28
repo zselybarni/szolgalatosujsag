@@ -285,6 +285,7 @@ tools/                  jegyzékkészítő, fejlesztői kiszolgáló, tesztek
 vendor/marked.min.js    a bemásolt Markdown-értelmező
 docs/adr/               miért így épül a lap
 docs/cikkiras.md        cikkírási útmutató
+docs/meres.md           a mért események és a GA4 beállításuk
 CONTEXT.md              a projekt szótára
 ```
 
@@ -328,6 +329,9 @@ tábor és az állomások koordinátái (`TABOR`, `ALLOMASOK`).
   szerkesztőn nem. A mérőkód `async`, tehát ha nem tölt be, a lap ugyanúgy
   működik; a sütikről és a hozzájárulásról lásd a
   [0009-es ADR](docs/adr/0009-latogatottsagmeres-google-analytics.md)-t.
+  A lap saját eseményeket is küld (melyik cikket olvassák végig, honnan jutnak
+  oda, használják-e az időjárás-jelzőt): a lista és a GA4-ben elvégzendő
+  egyszeri beállítás a [docs/meres.md](docs/meres.md)-ben.
 
 > A repóban lévő cikkek és a hozzájuk tartozó képek minta gyanánt készültek: a
 > lap működését mutatják be, nem a Gyermekvasút hivatalos közleményei.
