@@ -5,10 +5,12 @@ import { cikkBetolt } from './content.js';
 import { elem, hozzafuz, ikon, urit } from './dom.js';
 import { datumHosszu, relativDatum } from './format.js';
 
+/** @returns {Promise<object>} a kirajzolt cikk fejlécadata – a mérés ezt jelenti be */
 export async function cikkNezet(tarolo, slug, mindenCikk) {
   const { meta, html } = await cikkBetolt(slug);
   cikkRajzol(tarolo, meta, html, mindenCikk);
   document.title = `${meta.title} · ${LAP.nev}`;
+  return meta;
 }
 
 /**

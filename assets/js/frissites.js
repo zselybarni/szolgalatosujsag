@@ -17,6 +17,7 @@
 import { HIRFOLYAM } from './config.js';
 import { jegyzekUjratolt } from './content.js';
 import { elem, ikon, urit } from './dom.js';
+import { esemeny } from './meres.js';
 
 /** Ennyi ideig nem kérdezünk újra, akárhányszor vált vissza a fül. */
 const SZUNET = Math.max(0, HIRFOLYAM.frissitesPercek ?? 0) * 60_000;
@@ -35,6 +36,7 @@ export function frissitesInditas({ ujraRajzol }) {
 
   ajanlat.addEventListener('click', () => {
     const cikkek = frissCikkek;
+    esemeny('frissites_elfogadva');
     elrejt();
     ujraRajzol(cikkek);
     // A változás a hírfolyam tetején van, az olvasó viszont bárhol tarthat.
@@ -83,6 +85,7 @@ export function frissitesInditas({ ujraRajzol }) {
   function mutat(ujCikkek, valtozottCikkek) {
     // Előbb látszik, utána kap szöveget: a rejtett elem változását a
     // képernyőolvasó nem mondaná be.
+    esemeny('frissites_ajanlat', { uj_cikk: ujCikkek.length, valtozott: valtozottCikkek.length });
     ajanlat.hidden = false;
     urit(ajanlat).append(
       ikon('ikon-frissites', 'frissites__ikon'),

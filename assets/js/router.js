@@ -15,6 +15,7 @@ import { jegyzekBetolt } from './content.js';
 import { cikkNezet } from './article.js';
 import { elem, urit } from './dom.js';
 import { hirfolyamNezet } from './feed.js';
+import { cikkMegnyitas } from './meres.js';
 
 /**
  * @returns {() => void} a mostani útvonal újrarajzolása – a lap frissítéséhez,
@@ -34,7 +35,7 @@ async function valt(tarolo) {
   const { cikkek } = await jegyzekBetolt();
 
   if (utvonal.nezet === 'cikk') {
-    await cikkNezet(tarolo, utvonal.slug, cikkek);
+    cikkMegnyitas(await cikkNezet(tarolo, utvonal.slug, cikkek));
   } else {
     document.title = utvonal.rovat ? `${utvonal.rovat} · ${LAP.nev}` : `${LAP.nev} – ${LAP.alcim}`;
     hirfolyamNezet(tarolo, { cikkek, rovat: utvonal.rovat });
